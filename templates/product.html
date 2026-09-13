@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block title %}
+Products
+{% endblock %}
+
+{% block content %}
+
+<div class="shop-page">
+
+    <!-- TOP SECTION -->
+
+    <section class="shop-hero">
+
+        <div class="shop-heading">
+
+            <span class="shop-eyebrow">
+                CURATED FOR YOU
+            </span>
+
+            {% if selected_category %}
+
+                <h1>
+                    {{ selected_category }} Collection
+                </h1>
+
+                <p>
+                    Discover our latest {{ selected_category }} products.
+                </p>
+
+            {% elif search %}
+
+                <h1>
+                    Search Results
+                </h1>
+
+                <p>
+                    Products matching "{{ search }}"
+                </p>
+
+            {% else %}
+
+                <h1>
+                    All Products
+                </h1>
+
+                <p>
+                    Discover products you'll love, all in one place.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- SEARCH AND FILTER -->
+
+    {% if not selected_category %}
+
+    <section class="shop-toolbar">
+
+        <form
+            action="/products"
+            method="GET"
+            class="shop-search-form"
+        >
+
+            <div class="shop-search">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    class="search-icon"
+                >
+
+                    <circle
+                        cx="11"
+                        cy="11"
+                        r="7">
+                    </circle>
+
+                    <path
+                        d="M20 20l-4-4">
+                    </path>
+
+                </svg>
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search products, brands and more..."
+                    value="{{ search }}"
+                >
+
+            </div>
+
+
+            <div class="shop-select">
+
+                <select name="category">
+
+                    <option value="">
+                        All Categories
+                    </option>
+
+                    {% for category in categories %}
+
+                    <option
+                        value="{{ category.category }}"
+                        {% if selected_category == category.category %}
+                            selected
+                        {% endif %}
+                    >
+
+                        {{ category.category }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="shop-search-button"
+            >
+                Search
+            </button>
+
+        </form>
+
+    </section>
+
+    {% endif %}
+
+
+    <!-- PRODUCTS -->
+
+    {% if products %}
+
+    <section class="shop-products">
+
+        <div class="shop-grid">
+
+            {% for product in products %}
+
+            <article class="shop-card">
+
+
+                <!-- IMAGE -->
+
+                <!-- IMAGE -->
+
+<div class="shop-image">
+
+    <a
+        href="/product/{{ product.id }}"
+        class="product-image-link"
+    >
+
+        {% if product.image %}
+
+            <img
+                src="{{ url_for('static', filename='images/' + product.image) }}"
+                alt="{{ product.name }}"
+            >
+
+        {% elif product.category == "Electronics" %}
+
+            <img
+                src="{{ url_for('static', filename='images/electronics.jpg') }}"
+                alt="{{ product.name }}"
+            >
+
+        {% elif product.category == "Mens" %}
+
+            <img
+                src="{{ url_for('static', filename='images/mens.jpg') }}"
+                alt="{{ product.name }}"
+            >
+
+        {% elif product.category == "Womens" %}
+
+            <img
+                src="{{ url_for('static', filename='images/womens.jpg') }}"
+                alt="{{ product.name }}"
+            >
+
+        {% elif product.category == "Kids" %}
+
+            <img
+                src="{{ url_for('static', filename='images/kids.jpg') }}"
+                alt="{{ product.name }}"
+            >
+
+        {% elif product.category == "Makeup" %}
+
+            <img
+                src="{{ url_for('static', filename='images/makeup.jpg') }}"
+                alt="{{ product.name }}"
+            >
+
+        {% elif product.category == "Grocery" %}
+
+            <img
+                src="{{ url_for('static', filename='images/grocery.jpg') }}"
+                alt="{{ product.name }}"
+            >
+
+        {% else %}
+
+            <div class="no-image">
+                No Image
+            </div>
+
+        {% endif %}
+
+    </a>
+
+
+    <!-- WISHLIST -->
+
+    <a
+        href="/add-to-wishlist/{{ product.id }}"
+        class="shop-wishlist"
+        title="Add to Wishlist"
+        aria-label="Add {{ product.name }} to wishlist"
+    >
+
+        <svg viewBox="0 0 24 24">
+
+            <path
+                d="M20.8 8.8c0 5.5-8.8 10.2-8.8 10.2S3.2 14.3 3.2 8.8A5.2 5.2 0 0 1 12 5.6a5.2 5.2 0 0 1 8.8 3.2z"
+            ></path>
+
+        </svg>
+
+    </a>
+
+
+    <span class="shop-badge">
+        NEW
+    </span>
+
+</div>
+
+
+                <!-- PRODUCT DETAILS -->
+
+                <div class="shop-details">
+
+                    <span class="shop-category">
+                        {{ product.category }}
+                    </span>
+
+
+                    <h2 class="shop-product-name">
+                        {{ product.name }}
+                    </h2>
+
+
+                    <p class="shop-description">
+                        {{ product.description }}
+                    </p>
+
+
+                    <div class="shop-price-row">
+
+                        <span class="shop-price">
+                            ₹{{ product.price }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACTIONS -->
+
+                <div class="shop-actions">
+
+                    <button
+                        type="button"
+                        class="add-to-cart-button"
+                        data-cart-product-id="{{ product.id }}"
+                    >
+                        Add to Cart
+                    </button>
+
+
+                    <a
+                        href="/recommendations/{{ product.id }}"
+                        class="recommendation-btn"
+                    >
+                        View Similar
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    {% else %}
+
+
+    <!-- EMPTY -->
+
+    <section class="shop-empty">
+
+        <div class="empty-icon">
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="11"
+                    cy="11"
+                    r="7">
+                </circle>
+
+                <path
+                    d="M20 20l-4-4">
+                </path>
+
+            </svg>
+
+        </div>
+
+
+        <h2>
+            No products found
+        </h2>
+
+
+        <p>
+            Try searching with a different product name or category.
+        </p>
+
+
+        <a href="/products">
+            View All Products
+        </a>
+
+    </section>
+
+    {% endif %}
+
+</div>
+
+
+<script
+    src="{{ url_for('static', filename='j-Script/product.js') }}">
+</script>
+
+{% endblock %}

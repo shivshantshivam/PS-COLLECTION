@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ product.name }}
+{% endblock %}
+
+{% block content %}
+
+<div class="product-detail-page">
+
+
+    <!-- =========================
+         MAIN PRODUCT
+    ========================== -->
+
+    <section class="product-detail">
+
+
+        <!-- IMAGE -->
+
+        <div class="product-detail-image">
+
+            {% if product.image %}
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='images/' + product.image
+                ) }}"
+                alt="{{ product.name }}"
+            >
+
+            {% else %}
+
+            <div class="product-detail-no-image">
+                No Image
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- INFO -->
+
+        <div class="product-detail-info">
+
+            <span class="product-detail-category">
+                {{ product.category }}
+            </span>
+
+
+            <h1>
+                {{ product.name }}
+            </h1>
+
+
+            <!-- RATING -->
+
+            <div class="product-detail-rating">
+
+                {% if review_count > 0 %}
+
+                    <span class="rating-stars">
+                        {% for i in range(1, 6) %}
+                            {% if average_rating >= i %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+
+                    <span class="rating-number">
+                        {{ "%.1f"|format(average_rating|float) }}
+                    </span>
+
+                    <span class="rating-count">
+                        ({{ review_count }} reviews)
+                    </span>
+
+                {% else %}
+
+                    <span class="no-rating">
+                        No reviews yet
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- PRICE -->
+
+            <div class="product-detail-price">
+                ₹{{ product.price }}
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            {% if product.description %}
+
+            <div class="product-detail-description">
+
+                <h3>
+                    Description
+                </h3>
+
+                <p>
+                    {{ product.description }}
+                </p>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- ACTIONS -->
+
+            <div class="product-detail-actions">
+
+                <button
+                    type="button"
+                    class="product-detail-cart"
+                    data-cart-product-id="{{ product.id }}"
+                >
+                    Add to Cart
+                </button>
+
+
+                <a
+                    href="/add-to-wishlist/{{ product.id }}"
+                    class="product-detail-wishlist"
+                >
+                    Add to Wishlist
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         REVIEWS
+    ========================== -->
+
+    <section class="product-reviews">
+
+        <div class="reviews-heading">
+
+            <span>
+                CUSTOMER FEEDBACK
+            </span>
+
+            <h2>
+                Reviews & Ratings
+            </h2>
+
+            {% if review_count > 0 %}
+
+            <p>
+                {{ review_count }} customer review(s)
+            </p>
+
+            {% else %}
+
+            <p>
+                Be the first to review this product.
+            </p>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ADD REVIEW -->
+
+        {% if session.get("user_id") %}
+
+        <div class="review-form-card">
+
+            <h3>
+                Write a Review
+            </h3>
+
+            <form
+                action="/add-review/{{ product.id }}"
+                method="POST"
+            >
+
+                <label for="rating">
+                    Rating
+                </label>
+
+                <select
+                    name="rating"
+                    id="rating"
+                    required
+                >
+                    <option value="">
+                        Select Rating
+                    </option>
+
+                    <option value="5">
+                        ★★★★★ — Excellent
+                    </option>
+
+                    <option value="4">
+                        ★★★★☆ — Very Good
+                    </option>
+
+                    <option value="3">
+                        ★★★☆☆ — Good
+                    </option>
+
+                    <option value="2">
+                        ★★☆☆☆ — Average
+                    </option>
+
+                    <option value="1">
+                        ★☆☆☆☆ — Poor
+                    </option>
+
+                </select>
+
+
+                <label for="review">
+                    Your Review
+                </label>
+
+                <textarea
+                    name="review"
+                    id="review"
+                    rows="4"
+                    placeholder="Share your experience with this product..."
+                ></textarea>
+
+
+                <button type="submit">
+                    Submit Review
+                </button>
+
+            </form>
+
+        </div>
+
+        {% else %}
+
+        <div class="review-login-message">
+
+            <p>
+                Please login to write a review.
+            </p>
+
+            <a href="/login">
+                Login
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- EXISTING REVIEWS -->
+
+        {% if reviews %}
+
+        <div class="reviews-list">
+
+            {% for review in reviews %}
+
+            <article class="review-card">
+
+                <div class="review-top">
+
+                    <div>
+
+                        <strong>
+                            {{ review.name }}
+                        </strong>
+
+                        <div class="review-stars">
+
+                            {% for i in range(1, 6) %}
+
+                                {% if review.rating >= i %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    <small>
+                        {{ review.created_at }}
+                    </small>
+
+                </div>
+
+
+                {% if review.review %}
+
+                <p>
+                    {{ review.review }}
+                </p>
+
+                {% endif %}
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="no-reviews">
+            No reviews yet.
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+
+    <!-- =========================
+         SIMILAR PRODUCTS
+    ========================== -->
+
+    {% if similar_products %}
+
+    <section class="similar-products">
+
+        <div class="similar-heading">
+
+            <span>
+                YOU MAY ALSO LIKE
+            </span>
+
+            <h2>
+                Similar Products
+            </h2>
+
+            <p>
+                More products from the same collection.
+            </p>
+
+        </div>
+
+
+        <div class="similar-grid">
+
+            {% for similar in similar_products %}
+
+            <a
+                href="/product/{{ similar.id }}"
+                class="similar-card"
+            >
+
+                <div class="similar-image">
+
+                    {% if similar.image %}
+
+                    <img
+                        src="{{ url_for(
+                            'static',
+                            filename='images/' + similar.image
+                        ) }}"
+                        alt="{{ similar.name }}"
+                    >
+
+                    {% else %}
+
+                    <span>
+                        No Image
+                    </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="similar-info">
+
+                    <span>
+                        {{ similar.category }}
+                    </span>
+
+                    <h3>
+                        {{ similar.name }}
+                    </h3>
+
+                    <strong>
+                        ₹{{ similar.price }}
+                    </strong>
+
+                </div>
+
+            </a>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+</div>
+
+
+<script
+    src="{{ url_for(
+        'static',
+        filename='j-Script/product.js'
+    ) }}"
+></script>
+
+{% endblock %}

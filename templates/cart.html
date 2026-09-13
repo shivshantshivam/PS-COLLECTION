@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}
+Shopping Cart
+{% endblock %}
+
+{% block content %}
+
+<div class="cart-page">
+
+    <div class="cart-header">
+
+        <h2>Shopping Cart</h2>
+
+        {% if cart_items %}
+            <p>{{ cart_items|length }} item(s) in your cart</p>
+        {% endif %}
+
+    </div>
+
+
+    {% if cart_items %}
+
+        <div class="cart-layout">
+
+            <!-- CART ITEMS -->
+
+            <div class="cart-items">
+
+                {% for item in cart_items %}
+
+                    <div class="cart-item">
+
+                        <div class="cart-product-image">
+
+                            <img
+                                src="{{ url_for('static', filename='images/' + item.image) }}"
+                                alt="{{ item.name }}"
+                            >
+
+                        </div>
+
+
+                        <div class="cart-product-info">
+
+                            <h3>{{ item.name }}</h3>
+
+                            <p class="cart-product-price">
+                                ₹{{ item.price }}
+                            </p>
+
+
+                            <div class="cart-item-bottom">
+
+                                <div class="quantity-box">
+
+                                    <a
+                                        href="/update-cart/{{ item.id }}/decrease"
+                                        class="quantity-btn"
+                                    >
+                                        −
+                                    </a>
+
+                                    <span class="quantity">
+                                        {{ item.quantity }}
+                                    </span>
+
+                                    <a
+                                        href="/update-cart/{{ item.id }}/increase"
+                                        class="quantity-btn"
+                                    >
+                                        +
+                                    </a>
+
+                                </div>
+
+
+                                <a
+                                    href="/remove-from-cart/{{ item.id }}"
+                                    class="remove-cart"
+                                >
+                                    Remove
+                                </a>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="cart-item-total">
+
+                            ₹{{ "%.2f"|format(item.subtotal) }}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <div class="cart-summary">
+
+                <h3>Order Summary</h3>
+
+
+                <div class="summary-row">
+
+                    <span>Subtotal</span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(total) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="summary-row">
+
+                    <span>Delivery</span>
+
+                    <strong>FREE</strong>
+
+                </div>
+
+
+                <div class="summary-line"></div>
+
+
+                <div class="summary-total">
+
+                    <span>Total</span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(total) }}
+                    </strong>
+
+                </div>
+
+
+                <a
+                    href="/checkout"
+                    class="checkout-button"
+                >
+                    Proceed to Checkout
+                </a>
+
+
+                <a
+                    href="/products"
+                    class="continue-shopping"
+                >
+                    ← Continue Shopping
+                </a>
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+        <!-- EMPTY CART -->
+
+        <div class="empty-cart">
+
+            <div class="empty-cart-icon">
+                🛒
+            </div>
+
+            <h3>Your Cart is Empty</h3>
+
+            <p>
+                Looks like you haven't added anything to your cart yet.
+            </p>
+
+            <a href="/products">
+                Start Shopping
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

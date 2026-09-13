@@ -1,0 +1,1075 @@
+{% extends "base.html" %}
+
+{% block title %}PS COLLECTION{% endblock %}
+
+{% block content %}
+
+<div class="home-page">
+
+    <!-- =====================================================
+         PREMIUM OFFER STRIP
+    ====================================================== -->
+
+    <div class="offer-bar">
+
+        <span>✦ FREE SHIPPING ABOVE ₹999</span>
+
+        <span>AI POWERED RECOMMENDATIONS</span>
+
+        <span>SHOP SMARTER, LIVE BETTER</span>
+
+        <a href="/products">
+            Shop Now →
+        </a>
+
+    </div>
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="shop-hero">
+
+        <div class="hero-content">
+
+            <span class="hero-label">
+                SMART SHOPPING EXPERIENCE
+            </span>
+
+            <h1>
+                Find products<br>
+                <strong>you'll love.</strong>
+            </h1>
+
+            <p>
+                Explore our collection and discover smarter
+                recommendations with AI-powered shopping.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="/products" class="primary-btn">
+                    Shop Now
+                    <span>→</span>
+                </a>
+
+                <a href="#categories" class="secondary-btn">
+                    Explore Categories
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-products">
+
+            <div class="hero-image main-image">
+
+                <a href="/products?category=Electronics">
+
+                    <img
+                        src="{{ url_for('static', filename='images/headphones.jpg') }}"
+                        alt="Headphones"
+                    >
+
+                </a>
+
+            </div>
+
+
+            <div class="small-image hero-image">
+
+                <a href="/products?category=Electronics">
+
+                    <img
+                        src="{{ url_for('static', filename='images/smartwatch.jpg') }}"
+                        alt="Smart Watch"
+                    >
+
+                </a>
+
+            </div>
+
+
+            <div class="hero-price">
+
+                <span>TOP PICK</span>
+
+                <strong>Smart Picks</strong>
+
+                <small>
+                    Selected by AI
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         QUICK FEATURES
+    ====================================================== -->
+
+    <section class="quick-features">
+
+        <div class="quick-feature">
+
+            <span class="feature-icon">
+                ✦
+            </span>
+
+            <div>
+
+                <strong>
+                    AI Recommendations
+                </strong>
+
+                <small>
+                    Find products you'll like
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-feature">
+
+            <span class="feature-icon">
+                ♡
+            </span>
+
+            <div>
+
+                <strong>
+                    Wishlist
+                </strong>
+
+                <small>
+                    Save your favorite products
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-feature">
+
+            <span class="feature-icon">
+                🛒
+            </span>
+
+            <div>
+
+                <strong>
+                    Easy Cart
+                </strong>
+
+                <small>
+                    Simple shopping experience
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <div class="quick-feature">
+
+            <span class="feature-icon">
+                ✓
+            </span>
+
+            <div>
+
+                <strong>
+                    Easy Checkout
+                </strong>
+
+                <small>
+                    Quick and simple orders
+                </small>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FEATURED PRODUCTS
+    ====================================================== -->
+
+    <section class="products-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    TRENDING NOW
+                </span>
+
+                <h2>
+                    Featured Products
+                </h2>
+
+            </div>
+
+            <a href="/products">
+                View All Products →
+            </a>
+
+        </div>
+
+
+        {% if products %}
+
+        <div class="product-grid">
+
+            {% for product in products[:30] %}
+
+            <article class="product-card">
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="product-image">
+
+                    <a
+                        href="/product/{{ product.id }}"
+                        class="product-image-link"
+                    >
+
+                        {% if product.image %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/' + product.image) }}"
+                            alt="{{ product.name }}"
+                        >
+
+                        {% endif %}
+
+                    </a>
+
+
+                    <span class="product-badge">
+                        FEATURED
+                    </span>
+
+
+                    <!-- WISHLIST -->
+
+                    <a
+                        href="/add-to-wishlist/{{ product.id }}"
+                        class="wishlist-btn"
+                        title="Add to Wishlist"
+                        aria-label="Add {{ product.name }} to wishlist"
+                    >
+                        ♡
+                    </a>
+
+                </div>
+
+
+                <!-- PRODUCT INFO -->
+
+                <div class="product-info">
+
+                    <span class="product-category">
+                        {{ product.category }}
+                    </span>
+
+
+                    <h3>
+                        {{ product.name }}
+                    </h3>
+
+
+                    <p>
+                        {{ product.description }}
+                    </p>
+
+
+                    <div class="rating">
+
+                        <span>
+                            ★★★★★
+                        </span>
+
+                        <small>
+                            Customer favorite
+                        </small>
+
+                    </div>
+
+
+                    <div class="product-bottom">
+
+                        <strong>
+                            ₹{{ product.price }}
+                        </strong>
+
+
+                        <form
+                            action="/add-to-cart"
+                            method="POST"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="product_id"
+                                value="{{ product.id }}"
+                            >
+
+                            <button
+                                type="submit"
+                                class="cart-btn"
+                            >
+                                🛒 Add to Cart
+                            </button>
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- SIMILAR PRODUCTS -->
+
+                    <a
+                        href="/recommendations/{{ product.id }}"
+                        class="similar-link"
+                    >
+                        ✦ See similar products
+                    </a>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-products">
+
+            <div>
+
+                <span>
+                    🛍️
+                </span>
+
+                <h3>
+                    Products coming soon
+                </h3>
+
+                <p>
+                    Add products from your admin panel
+                    to display them here.
+                </p>
+
+                <a href="/products">
+                    Browse Products →
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =====================================================
+         DEAL OF THE DAY
+    ====================================================== -->
+
+    <a
+        href="/products?category=Electronics"
+        class="deal-link"
+    >
+
+        <section class="deal-section">
+
+            <div class="deal-content">
+
+                <span class="deal-label">
+                    ⚡ DEAL OF THE DAY
+                </span>
+
+                <h2>
+                    Upgrade your everyday.
+                </h2>
+
+                <p>
+                    Wireless Headphones
+                </p>
+
+
+                <div class="deal-price">
+
+                    <del>
+                        ₹2,799
+                    </del>
+
+                    <strong>
+                        ₹1,999
+                    </strong>
+
+                    <span>
+                        40% OFF
+                    </span>
+
+                </div>
+
+
+                <span class="deal-button">
+                    Shop Deal →
+                </span>
+
+            </div>
+
+
+            <div class="deal-product-image">
+
+                <img
+                    src="{{ url_for('static', filename='images/headphones.jpg') }}"
+                    alt="Wireless Headphones"
+                >
+
+            </div>
+
+
+            <!-- ACTUAL LIVE TIMER -->
+
+            <div class="deal-timer-wrapper">
+
+                <span class="timer-label">
+                    ⏱ Hurry! Offer ends in
+                </span>
+
+
+                <div class="deal-timer">
+
+                    <div>
+
+                        <strong id="deal-hours">
+                            12
+                        </strong>
+
+                        <small>
+                            Hours
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong id="deal-minutes">
+                            45
+                        </strong>
+
+                        <small>
+                            Minutes
+                        </small>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong id="deal-seconds">
+                            30
+                        </strong>
+
+                        <small>
+                            Seconds
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </a>
+
+
+    <!-- =====================================================
+         CATEGORIES
+    ====================================================== -->
+
+    <section
+        class="categories-section"
+        id="categories"
+    >
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    SHOP BY CATEGORY
+                </span>
+
+                <h2>
+                    Popular Categories
+                </h2>
+
+            </div>
+
+            <a href="/products">
+                View All Categories →
+            </a>
+
+        </div>
+
+
+        <div class="category-grid">
+
+
+            <!-- KIDS -->
+
+            <a
+                href="/products?category=Kids"
+                class="category-box kids"
+            >
+
+                <div class="category-image">
+
+                    {% set kids_products =
+                        products
+                        | selectattr("category", "equalto", "Kids")
+                        | list
+                    %}
+
+                    {% if kids_products and kids_products[0].image %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/' + kids_products[0].image
+                            ) }}"
+                            alt="Kids"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/shoes.jpg') }}"
+                            alt="Kids"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="category-text">
+
+                    <span>01</span>
+
+                    <h3>
+                        Kids
+                    </h3>
+
+                    <p>
+                        Fun & stylish picks →
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- MENS -->
+
+            <a
+                href="/products?category=Mens"
+                class="category-box mens"
+            >
+
+                <div class="category-image">
+
+                    {% set mens_products =
+                        products
+                        | selectattr("category", "equalto", "Mens")
+                        | list
+                    %}
+
+                    {% if mens_products and mens_products[0].image %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/' + mens_products[0].image
+                            ) }}"
+                            alt="Mens"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/shoes.jpg') }}"
+                            alt="Mens"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="category-text">
+
+                    <span>02</span>
+
+                    <h3>
+                        Mens
+                    </h3>
+
+                    <p>
+                        Everyday essentials →
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- WOMENS -->
+
+            <a
+                href="/products?category=Womens"
+                class="category-box womens"
+            >
+
+                <div class="category-image">
+
+                    {% set womens_products =
+                        products
+                        | selectattr("category", "equalto", "Womens")
+                        | list
+                    %}
+
+                    {% if womens_products and womens_products[0].image %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/' + womens_products[0].image
+                            ) }}"
+                            alt="Womens"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/smartwatch.jpg') }}"
+                            alt="Womens"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="category-text">
+
+                    <span>03</span>
+
+                    <h3>
+                        Womens
+                    </h3>
+
+                    <p>
+                        Style for every moment →
+                    </p>
+
+                </div>
+
+            </a>
+
+
+            <!-- ELECTRONICS -->
+
+            <a
+                href="/products?category=Electronics"
+                class="category-box electronics"
+            >
+
+                <div class="category-image">
+
+                    {% set electronics_products =
+                        products
+                        | selectattr("category", "equalto", "Electronics")
+                        | list
+                    %}
+
+                    {% if electronics_products and electronics_products[0].image %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/' + electronics_products[0].image
+                            ) }}"
+                            alt="Electronics"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/headphones.jpg') }}"
+                            alt="Electronics"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="category-text">
+
+                    <span>04</span>
+
+                    <h3>
+                        Electronics
+                    </h3>
+
+                    <p>
+                        Smart tech & gadgets →
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         AI SHOPPING ASSISTANT
+    ====================================================== -->
+
+    <section class="ai-shopping">
+
+        <div class="ai-left">
+
+            <span class="section-label">
+                AI RECOMMENDATIONS
+            </span>
+
+            <h2>
+                Not sure what to buy?
+            </h2>
+
+            <p>
+                Let our AI assistant help you discover
+                products based on your interests.
+            </p>
+
+
+            <button
+                type="button"
+                class="ai-btn"
+                onclick="document.getElementById('chat-button').click()"
+            >
+
+                Ask AI Assistant
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+        </div>
+
+
+        <div class="ai-right">
+
+            <div class="ai-circle">
+
+                <span>
+                    ✦
+                </span>
+
+            </div>
+
+
+            <div class="ai-card">
+
+                <small>
+                    AI SHOPPING ASSISTANT
+                </small>
+
+                <strong>
+                    Your personal<br>
+                    shopping buddy
+                </strong>
+
+                <span>
+                    Smart recommendations
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MORE PRODUCTS
+    ====================================================== -->
+
+    <section class="products-section trending-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <span class="section-label">
+                    DISCOVER MORE
+                </span>
+
+                <h2>
+                    Shop What's Trending
+                </h2>
+
+            </div>
+
+            <a href="/products">
+                Explore Store →
+            </a>
+
+        </div>
+
+
+        {% if products %}
+
+        <div class="mini-products">
+
+            {% for product in products[:4] %}
+
+            <div class="mini-product">
+
+
+                <!-- MINI PRODUCT IMAGE → DETAIL -->
+
+                <div class="mini-image">
+
+                    <a
+                        href="/product/{{ product.id }}"
+                        class="mini-product-link"
+                    >
+
+                        {% if product.image %}
+
+                        <img
+                            src="{{ url_for(
+                                'static',
+                                filename='images/' + product.image
+                            ) }}"
+                            alt="{{ product.name }}"
+                        >
+
+                        {% endif %}
+
+                    </a>
+
+                </div>
+
+
+                <div class="mini-info">
+
+                    <span>
+                        {{ product.category }}
+                    </span>
+
+                    <h3>
+                        {{ product.name }}
+                    </h3>
+
+                    <strong>
+                        ₹{{ product.price }}
+                    </strong>
+
+
+                    <a href="/recommendations/{{ product.id }}">
+                        View Similar →
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- =====================================================
+         WHY SHOP WITH US
+    ====================================================== -->
+
+    <section class="why-section">
+
+        <div class="section-heading centered">
+
+            <span class="section-label">
+                WHY SHOP WITH US
+            </span>
+
+            <h2>
+                A better way to shop.
+            </h2>
+
+            <p>
+                Everything you need for a smooth
+                online shopping experience.
+            </p>
+
+        </div>
+
+
+        <div class="why-grid">
+
+
+            <div class="why-card">
+
+                <span>
+                    01
+                </span>
+
+                <div class="why-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    AI Recommendations
+                </h3>
+
+                <p>
+                    Discover products based on
+                    your interests.
+                </p>
+
+            </div>
+
+
+            <div class="why-card">
+
+                <span>
+                    02
+                </span>
+
+                <div class="why-icon">
+                    ♡
+                </div>
+
+                <h3>
+                    Wishlist
+                </h3>
+
+                <p>
+                    Save products you want
+                    to check later.
+                </p>
+
+            </div>
+
+
+            <div class="why-card">
+
+                <span>
+                    03
+                </span>
+
+                <div class="why-icon">
+                    🛒
+                </div>
+
+                <h3>
+                    Easy Shopping
+                </h3>
+
+                <p>
+                    Add products to your cart
+                    and checkout easily.
+                </p>
+
+            </div>
+
+
+            <div class="why-card">
+
+                <span>
+                    04
+                </span>
+
+                <div class="why-icon">
+                    🛡
+                </div>
+
+                <h3>
+                    Secure Shopping
+                </h3>
+
+                <p>
+                    Shop confidently with a
+                    simple experience.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FINAL CTA
+    ====================================================== -->
+
+    <section class="final-cta">
+
+        <div>
+
+            <span>
+                START SHOPPING TODAY
+            </span>
+
+            <h2>
+                Discover something<br>
+                you'll love.
+            </h2>
+
+        </div>
+
+
+        <a href="/products">
+            Shop All Products →
+        </a>
+
+    </section>
+
+</div>
+
+{% endblock %}

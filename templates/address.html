@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Address Book{% endblock %}
+
+{% block content %}
+
+<div class="address-page">
+
+    <h2>Address Book</h2>
+
+    <div class="address-box">
+
+        <h3>Add New Address</h3>
+
+        <form method="POST">
+
+            <label>Name</label>
+            <input type="text" name="name" required>
+
+            <label>Phone Number</label>
+            <input type="text" name="phone" required>
+
+            <label>Address</label>
+            <textarea name="address" required></textarea>
+
+            <label>City</label>
+            <input type="text" name="city" required>
+
+            <label>State</label>
+            <input type="text" name="state" required>
+
+            <label>Pincode</label>
+            <input type="text" name="pincode" required>
+
+            <button type="submit">Save Address</button>
+
+        </form>
+
+    </div>
+
+
+    {% if addresses %}
+
+        <div class="saved-addresses">
+
+            <h3>Saved Addresses</h3>
+
+            {% for address in addresses %}
+
+                <div class="saved-address">
+
+                    <h4>{{ address.name }}</h4>
+
+                    <p>{{ address.phone }}</p>
+
+                    <p>{{ address.address }}</p>
+
+                    <p>
+                        {{ address.city }},
+                        {{ address.state }}
+                        - {{ address.pincode }}
+                    </p>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+    <a href="/Account" class="back-account">
+        ← Back to Account
+    </a>
+
+</div>
+
+{% endblock %}

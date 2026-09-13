@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_users.css') }}">
+{% endblock %}
+
+{% block title %}Manage Users | Admin{% endblock %}
+
+{% block content %}
+
+<div class="admin-users-page">
+
+    <div class="users-hero">
+
+        <div>
+            <span class="users-eyebrow">ADMIN CONTROL CENTER</span>
+
+            <h1>Manage Users</h1>
+
+            <p>
+                Monitor registered customers and their latest activity.
+            </p>
+        </div>
+
+        <a href="/admin" class="back-admin-btn">
+            ← Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- Stats -->
+
+    <div class="users-stats">
+
+        <div class="user-stat-card">
+
+            <div class="stat-icon">👥</div>
+
+            <div>
+                <span>Total Users</span>
+                <strong>{{ users|length }}</strong>
+            </div>
+
+        </div>
+
+
+        <div class="user-stat-card">
+
+            <div class="stat-icon">✓</div>
+
+            <div>
+                <span>Registered</span>
+                <strong>{{ users|length }}</strong>
+            </div>
+
+        </div>
+
+
+        <div class="user-stat-card">
+
+            <div class="stat-icon">◷</div>
+
+            <div>
+                <span>Login Activity</span>
+
+                <strong>
+                    {{ users|selectattr('last_login')|list|length }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Users -->
+
+    <div class="users-container">
+
+        <div class="users-container-header">
+
+            <div>
+                <span>CUSTOMERS</span>
+                <h2>Registered Users</h2>
+            </div>
+
+            <div class="users-total">
+                {{ users|length }} users
+            </div>
+
+        </div>
+
+
+        {% if users %}
+
+        <div class="users-table-wrapper">
+
+            <table class="premium-users-table">
+
+                <thead>
+
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Registered</th>
+                        <th>Last Login</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for user in users %}
+
+                    <tr>
+
+                        <!-- User -->
+
+                        <td>
+
+                            <div class="user-profile">
+
+                                <div class="user-avatar">
+                                    {{ user.name[0]|upper }}
+                                </div>
+
+                                <div class="user-name">
+
+                                    <strong>
+                                        {{ user.name }}
+                                    </strong>
+
+                                    <small>
+                                        User #{{ user.id }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Email -->
+
+                        <td>
+
+                            <span class="user-email">
+                                {{ user.email }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- Phone -->
+
+                        <td>
+
+                            {% if user.phone %}
+
+                                {{ user.phone }}
+
+                            {% else %}
+
+                                <span class="not-added">
+                                    Not added
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Registered -->
+
+                        <td>
+
+                            {% if user.created_at %}
+
+                                <div class="date-info">
+
+                                    <strong>
+                                        {{ user.created_at.strftime('%d %b %Y') }}
+                                    </strong>
+
+                                </div>
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Last Login -->
+
+                        <td>
+
+                            {% if user.last_login %}
+
+                                <div class="login-status">
+
+                                    <span class="online-dot"></span>
+
+                                    <div>
+
+                                        <strong>Active</strong>
+
+                                        <small>
+                                            {{ user.last_login.strftime('%d %b %Y, %I:%M %p') }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            {% else %}
+
+                                <span class="never-login">
+                                    Never logged in
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-users">
+
+            <div>👥</div>
+
+            <h2>No users yet</h2>
+
+            <p>
+                Registered customers will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

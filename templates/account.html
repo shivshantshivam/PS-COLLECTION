@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+
+<div class="account-page">
+
+    <h2>My Account</h2>
+
+    {% if session.get("user_id") %}
+
+        <p class="account-welcome">
+            Welcome, {{ session.get("user_name") }}
+        </p>
+
+        <div class="account-grid">
+
+            <a href="/account/profile" class="account-card">
+                <div class="account-card-icon">👤</div>
+                <h3>Personal Information</h3>
+                <p>Manage your name and account details</p>
+            </a>
+
+            <a href="/orders" class="account-card">
+                <div class="account-card-icon">📦</div>
+                <h3>My Orders</h3>
+                <p>View your orders and order status</p>
+            </a>
+
+            <a href="/Wishlist" class="account-card">
+                <div class="account-card-icon">♡</div>
+                <h3>Wishlist</h3>
+                <p>View your saved products</p>
+            </a>
+
+            <a href="/cart" class="account-card">
+                <div class="account-card-icon">🛒</div>
+                <h3>My Cart</h3>
+                <p>View and manage your cart</p>
+            </a>
+
+            <a href="/account/address" class="account-card">
+                <div class="account-card-icon">📍</div>
+                <h3>Address Book</h3>
+                <p>Manage your delivery addresses</p>
+            </a>
+
+            <a href="/account/change-password" class="account-card">
+                <div class="account-card-icon">🔐</div>
+                <h3>Change Password</h3>
+                <p>Update your account password</p>
+            </a>
+
+            <a href="/logout" class="account-card logout-card">
+                <div class="account-card-icon">↪</div>
+                <h3>Logout</h3>
+                <p>Sign out from your account</p>
+            </a>
+
+        </div>
+
+    {% else %}
+
+        <p class="account-welcome">
+            You are not logged in.
+        </p>
+
+        <div class="account-grid">
+
+            <a href="/login" class="account-card">
+                <div class="account-card-icon">🔐</div>
+                <h3>Login</h3>
+                <p>Login to your account</p>
+            </a>
+
+            <a href="/register" class="account-card">
+                <div class="account-card-icon">📝</div>
+                <h3>Register</h3>
+                <p>Create a new account</p>
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

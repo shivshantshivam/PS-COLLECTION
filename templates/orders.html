@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+
+<div class="orders-page">
+
+    <div class="orders-heading">
+        <span>YOUR SHOPPING</span>
+        <h1>My Orders</h1>
+        <p>Track your orders and view their current status.</p>
+    </div>
+
+    {% if orders %}
+
+        <div class="orders-list">
+
+            {% for order in orders %}
+
+            <div class="order-card">
+
+                <!-- ORDER HEADER -->
+                <div class="order-top">
+
+                    <div>
+                        <span class="order-label">ORDER</span>
+                        <h2>#{{ order.id }}</h2>
+                    </div>
+
+                    <div class="order-date">
+                        <span>PLACED ON</span>
+                        <strong>{{ order.created_at }}</strong>
+                    </div>
+
+                    <div class="order-status status-{{ order.status|lower }}">
+                        {{ order.status }}
+                    </div>
+
+                </div>
+
+
+                <!-- ORDER INFO -->
+                <div class="order-info">
+
+                    <div>
+                        <span>Total Amount</span>
+                        <strong>₹{{ order.total_amount }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Order Status</span>
+                        <strong>{{ order.status }}</strong>
+                    </div>
+
+                </div>
+
+
+                <!-- TRACKING -->
+                <div class="tracking-section">
+
+                    <div class="tracking-title">
+                        <span>ORDER TRACKING</span>
+                        <h3>Your order journey</h3>
+                    </div>
+
+
+                    <div class="tracking">
+
+                        <!-- STEP 1 -->
+                        <div class="tracking-step active">
+
+                            <div class="tracking-dot">
+                                ✓
+                            </div>
+
+                            <div class="tracking-text">
+                                <strong>Order Placed</strong>
+                                <small>Your order has been placed</small>
+                            </div>
+
+                        </div>
+
+
+                        <!-- LINE -->
+                        <div class="tracking-line
+                            {% if order.status in ['Confirmed', 'Shipped', 'Delivered'] %}
+                                completed
+                            {% endif %}
+                        "></div>
+
+
+                        <!-- STEP 2 -->
+                        <div class="tracking-step
+                            {% if order.status in ['Confirmed', 'Shipped', 'Delivered'] %}
+                                active
+                            {% endif %}
+                        ">
+
+                            <div class="tracking-dot">
+                                {% if order.status in ['Confirmed', 'Shipped', 'Delivered'] %}
+                                    ✓
+                                {% else %}
+                                    2
+                                {% endif %}
+                            </div>
+
+                            <div class="tracking-text">
+                                <strong>Confirmed</strong>
+                                <small>Order confirmed</small>
+                            </div>
+
+                        </div>
+
+
+                        <!-- LINE -->
+                        <div class="tracking-line
+                            {% if order.status in ['Shipped', 'Delivered'] %}
+                                completed
+                            {% endif %}
+                        "></div>
+
+
+                        <!-- STEP 3 -->
+                        <div class="tracking-step
+                            {% if order.status in ['Shipped', 'Delivered'] %}
+                                active
+                            {% endif %}
+                        ">
+
+                            <div class="tracking-dot">
+                                {% if order.status in ['Shipped', 'Delivered'] %}
+                                    ✓
+                                {% else %}
+                                    3
+                                {% endif %}
+                            </div>
+
+                            <div class="tracking-text">
+                                <strong>Shipped</strong>
+                                <small>Order is on the way</small>
+                            </div>
+
+                        </div>
+
+
+                        <!-- LINE -->
+                        <div class="tracking-line
+                            {% if order.status == 'Delivered' %}
+                                completed
+                            {% endif %}
+                        "></div>
+
+
+                        <!-- STEP 4 -->
+                        <div class="tracking-step
+                            {% if order.status == 'Delivered' %}
+                                active
+                            {% endif %}
+                        ">
+
+                            <div class="tracking-dot">
+                                {% if order.status == 'Delivered' %}
+                                    ✓
+                                {% else %}
+                                    4
+                                {% endif %}
+                            </div>
+
+                            <div class="tracking-text">
+                                <strong>Delivered</strong>
+                                <small>Order delivered successfully</small>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="orders-empty">
+
+            <div class="orders-empty-icon">
+                ◌
+            </div>
+
+            <h2>No Orders Yet</h2>
+
+            <p>
+                You haven't placed any orders yet.
+            </p>
+
+            <a href="/products">
+                Start Shopping
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,284 @@
+/* @import url("home.css"); */
+@import url("about.css");
+@import url("contact.css");
+@import url("logo.css");
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+
+    width: 100%;
+    height: 82px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 55px;
+    box-sizing: border-box;
+
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+
+    font-family: Arial, sans-serif;
+}
+
+
+/* ================= LOGO ================= */
+
+header h2 {
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+
+    flex-shrink: 0;
+}
+
+.logo-img {
+    width: 100px;
+    height: auto;
+    display: block;
+}
+
+
+/* ================= NAVIGATION ================= */
+
+.left-nav {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    margin-left: 48px;
+    gap: 36px;
+
+    white-space: nowrap;
+}
+
+.left-nav a {
+    position: relative;
+
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    color: #282c3f;
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+
+    transition: color 0.2s ease;
+}
+
+.left-nav a:hover {
+    color: #6a2e2e;
+}
+
+
+/* Bottom line */
+
+.left-nav a::after {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 3px;
+
+    background: #86dff1b8;
+
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+}
+
+.left-nav a:hover::after,
+.left-nav a.active::after {
+    transform: scaleX(1);
+}
+
+.left-nav a.active {
+    color: #86dff1b8;
+}
+
+
+/* ================= RIGHT SIDE ================= */
+
+.right-nav {
+    margin-left: auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 30px;
+
+    flex-shrink: 0;
+}
+
+
+/* ================= SEARCH ================= */
+
+header .search-box {
+    width: 300px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    margin: 0;
+    padding: 0;
+
+    background: #f5f5f6;
+
+    border: 1px solid #eeeeee;
+    border-radius: 5px;
+
+    overflow: hidden;
+}
+
+header .search-box input {
+    flex: 1;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 0 16px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #282c3f;
+    font-size: 14px;
+}
+
+header .search-box input::placeholder {
+    color: #94969f;
+}
+
+header .search-box button {
+    width: 48px;
+    height: 100%;
+
+    border: none;
+    background: transparent;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+
+/* ================= ACCOUNT / WISHLIST / CART ================= */
+
+.header-icon-link {
+    min-width: 58px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    color: #282c3f;
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition: color 0.2s ease;
+}
+
+.header-icon-link:hover {
+    color: #bbf1fcb8;
+}
+
+
+/* ================= ICONS ================= */
+
+.header-icon {
+    width: 26px;
+    height: 26px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-icon svg {
+    width: 24px;
+    height: 24px;
+
+    fill: none;
+    stroke: currentColor;
+
+    stroke-width: 1.7;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+@media (max-width: 1350px) {
+
+    header {
+        padding: 0 35px;
+    }
+
+    .left-nav {
+        margin-left: 32px;
+        gap: 25px;
+    }
+
+    .right-nav {
+        gap: 20px;
+    }
+
+    header .search-box {
+        width: 250px;
+    }
+}
+
+
+@media (max-width: 1150px) {
+
+    header {
+        padding: 0 25px;
+    }
+
+    .logo-img {
+        width: 110px;
+    }
+
+    .left-nav {
+        margin-left: 25px;
+        gap: 18px;
+    }
+
+    .left-nav a {
+        font-size: 12px;
+    }
+
+    .right-nav {
+        gap: 12px;
+    }
+
+    header .search-box {
+        width: 200px;
+    }
+}
+
+.admin-link .header-icon svg {
+    width: 22px;
+    height: 22px;
+    stroke-width: 2.5;
+}

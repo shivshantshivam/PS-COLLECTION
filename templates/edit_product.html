@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Product | Admin{% endblock %}
+
+{% block content %}
+
+<div class="edit-product-page">
+
+    <!-- Top Header -->
+    <div class="edit-product-header">
+
+        <div>
+            <p class="edit-eyebrow">ADMIN • PRODUCTS</p>
+
+            <h1>Edit Product</h1>
+
+            <p>
+                Update your product information and keep your store up to date.
+            </p>
+        </div>
+
+        <a href="/admin" class="back-admin-btn">
+            ← Back to Admin
+        </a>
+
+    </div>
+
+
+    <!-- Main Card -->
+    <div class="edit-product-card">
+
+        <!-- Product Preview -->
+        <div class="edit-product-preview">
+
+            <div class="preview-label">
+                PRODUCT PREVIEW
+            </div>
+
+            <div class="preview-image">
+
+                {% if product.image %}
+
+                <img
+                    src="{{ url_for('static', filename='images/' + product.image) }}"
+                    alt="{{ product.name }}"
+                >
+
+                {% else %}
+
+                <div class="no-preview">
+                    <span>◇</span>
+                    <p>No Image</p>
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <div class="preview-info">
+
+                <span class="preview-category">
+                    {{ product.category }}
+                </span>
+
+                <h2>{{ product.name }}</h2>
+
+                <p class="preview-price">
+                    ₹{{ product.price }}
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Edit Form -->
+        <div class="edit-product-form-area">
+
+            <div class="form-heading">
+
+                <span>PRODUCT DETAILS</span>
+
+                <h2>Update Information</h2>
+
+                <p>
+                    Make changes to the product below.
+                </p>
+
+            </div>
+
+
+            <form
+                action="/admin/edit-product/{{ product.id }}"
+                method="POST"
+                class="premium-edit-form"
+            >
+
+                <div class="form-row">
+
+                    <div class="premium-form-group">
+
+                        <label for="name">
+                            Product Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="name"
+                            name="name"
+                            value="{{ product.name }}"
+                            placeholder="Enter product name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="premium-form-group">
+
+                        <label for="price">
+                            Price
+                        </label>
+
+                        <div class="price-input">
+
+                            <span>₹</span>
+
+                            <input
+                                type="number"
+                                id="price"
+                                name="price"
+                                value="{{ product.price }}"
+                                placeholder="Enter price"
+                                step="0.01"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="premium-form-group">
+
+                        <label for="category">
+                            Category
+                        </label>
+
+                        <input
+                            type="text"
+                            id="category"
+                            name="category"
+                            value="{{ product.category }}"
+                            placeholder="Enter category"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="premium-form-group">
+
+                        <label for="image">
+                            Image Filename
+                        </label>
+
+                        <input
+                            type="text"
+                            id="image"
+                            name="image"
+                            value="{{ product.image or '' }}"
+                            placeholder="example.jpg"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="premium-form-group">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <textarea
+                        id="description"
+                        name="description"
+                        placeholder="Enter product description"
+                    >{{ product.description or '' }}</textarea>
+
+                </div>
+
+
+                <div class="form-divider"></div>
+
+
+                <div class="edit-form-actions">
+
+                    <a
+                        href="/admin"
+                        class="cancel-edit-btn"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="save-product-btn"
+                    >
+                        <span>✓</span>
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

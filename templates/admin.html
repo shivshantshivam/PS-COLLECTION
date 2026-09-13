@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div>
+            <p class="admin-small-title">ADMIN DASHBOARD</p>
+
+            <h2>Admin Panel</h2>
+
+            <p class="admin-subtitle">
+                Manage your store, products and orders
+            </p>
+        </div>
+
+        <div class="admin-header-actions">
+
+    <a href="/admin/users" class="manage-users-btn">
+        Manage Users
+    </a>
+
+    <a href="/admin/orders" class="manage-orders-btn">
+        Manage Orders
+    </a>
+
+</div>
+
+    </div>
+
+
+    <div class="admin-section">
+
+        <div class="section-heading">
+
+            <div>
+                <h3>Add Product</h3>
+
+                <p>
+                    Add a new product to your store
+                </p>
+            </div>
+
+        </div>
+
+
+        <form
+            action="/admin/add-product"
+            method="POST"
+            class="add-product-form"
+        >
+
+            <div class="form-group">
+
+                <label>Product Name</label>
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Enter product name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Price</label>
+
+                <input
+                    type="number"
+                    name="price"
+                    placeholder="Enter price"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Category</label>
+
+                <input
+                    type="text"
+                    name="category"
+                    placeholder="Enter category"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Description</label>
+
+                <input
+                    type="text"
+                    name="description"
+                    placeholder="Enter description"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>Image</label>
+
+                <input
+                    type="text"
+                    name="image"
+                    placeholder="Image filename"
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="add-product-btn"
+            >
+                + Add Product
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="admin-section">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h3>Products</h3>
+
+                <p>
+                    Manage products available in your store
+                </p>
+
+            </div>
+
+
+            <span class="product-count">
+                {{ products|length }} Products
+            </span>
+
+        </div>
+
+
+        <div class="admin-product-grid">
+
+            {% for product in products %}
+
+            <div class="admin-product-card">
+
+
+                <div class="product-card-top">
+
+                    <div class="product-image">
+
+                        {% if product.image %}
+
+                        <img
+                            src="{{ url_for('static', filename='images/' + product.image) }}"
+                            alt="{{ product.name }}"
+                        >
+
+                        {% else %}
+
+                        <span>
+                            No Image
+                        </span>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <span class="product-category">
+                        {{ product.category }}
+                    </span>
+
+                </div>
+
+
+                <div class="product-card-info">
+
+                    <h4>
+                        {{ product.name }}
+                    </h4>
+
+
+                    <p class="admin-product-price">
+                        ₹{{ product.price }}
+                    </p>
+
+
+                    {% if product.description %}
+
+                    <div class="description-box">
+
+                        <p class="admin-product-description">
+                            {{ product.description }}
+                        </p>
+
+
+                        <button
+                            type="button"
+                            class="description-toggle"
+                        >
+                            See More
+                        </button>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="product-card-actions">
+
+                    <a
+                        href="/admin/edit-product/{{ product.id }}"
+                        class="edit-btn"
+                    >
+                        Edit
+                    </a>
+
+
+                    <a
+                        href="/admin/delete-product/{{ product.id }}"
+                        class="delete-btn"
+                    >
+                        Delete
+                    </a>
+
+                </div>
+
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const descriptionButtons =
+        document.querySelectorAll(".description-toggle");
+
+
+    descriptionButtons.forEach(button => {
+
+        button.addEventListener("click", function () {
+
+            const description =
+                this.previousElementSibling;
+
+
+            description.classList.toggle("show-full");
+
+
+            if (
+                description.classList.contains("show-full")
+            ) {
+
+                this.textContent = "See Less";
+
+            } else {
+
+                this.textContent = "See More";
+
+            }
+
+        });
+
+    });
+
+</script>
+
+
+{% endblock %}

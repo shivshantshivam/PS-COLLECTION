@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}My Online Shop{% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/Aa_Main.css') }}"
+    >
+    {% block page_css %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_product.css') }}">
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header>
+
+        <!-- LOGO -->
+
+        <h2>
+
+            <a href="/" class="logo-link">
+
+                <img
+                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    class="logo-img"
+                    alt="My Online Shop"
+                >
+
+            </a>
+
+        </h2>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="left-nav">
+
+            <a href="/products?category=Kids">
+                KIDS
+            </a>
+
+            <a href="/products?category=Mens">
+                MENS
+            </a>
+
+            <a href="/products?category=Womens">
+                WOMENS
+            </a>
+
+            <a href="/products?category=Electronics">
+                ELECTRONICS
+            </a>
+
+            <a href="/products">
+                PRODUCTS
+            </a>
+
+        </nav>
+
+
+        <!-- RIGHT SIDE -->
+
+        <div class="right-nav">
+
+
+            <!-- SEARCH -->
+
+            <form
+                action="/products"
+                method="GET"
+                class="search-box"
+            >
+
+                <input
+                    type="text"
+                    name="search"
+                    placeholder="Search products..."
+                >
+
+                <button type="submit">
+                    🔍
+                </button>
+
+            </form>
+
+
+            <!-- ACCOUNT -->
+
+            <a
+                href="/Account"
+                class="header-icon-link"
+            >
+
+                <span class="header-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <circle
+                            cx="12"
+                            cy="8"
+                            r="4"
+                        ></circle>
+
+                        <path
+                            d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"
+                        ></path>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Account
+                </span>
+
+            </a>
+
+
+            <!-- ADMIN -->
+
+            {% if session.get("is_admin") %}
+
+            <a
+                href="/admin"
+                class="header-icon-link"
+            >
+
+                <span class="header-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3z"
+                        ></path>
+
+                        <path
+                            d="M9 12l2 2 4-4"
+                        ></path>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Admin
+                </span>
+
+            </a>
+
+            {% endif %}
+
+
+            <!-- WISHLIST -->
+
+            <a
+                href="/Wishlist"
+                class="header-icon-link"
+            >
+
+                <span class="header-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M20.8 8.8c0 5.5-8.8 10.2-8.8 10.2S3.2 14.3 3.2 8.8A5.2 5.2 0 0 1 12 5.6a5.2 5.2 0 0 1 8.8 3.2z"
+                        ></path>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Wishlist
+                </span>
+
+            </a>
+
+
+            <!-- CART -->
+
+            <a
+                href="/cart"
+                class="header-icon-link"
+            >
+
+                <span class="header-icon">
+
+                    <svg viewBox="0 0 24 24">
+
+                        <path
+                            d="M3 4h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L20 7H6"
+                        ></path>
+
+                        <circle
+                            cx="10"
+                            cy="20"
+                            r="1"
+                        ></circle>
+
+                        <circle
+                            cx="18"
+                            cy="20"
+                            r="1"
+                        ></circle>
+
+                    </svg>
+
+                </span>
+
+                <span>
+                    Cart
+                </span>
+
+            </a>
+
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
+    <main>
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+
+    <!-- =====================================================
+         PREMIUM FOOTER
+    ====================================================== -->
+
+    <footer class="premium-footer">
+
+
+        <!-- FOOTER MAIN -->
+
+        <div class="footer-top">
+
+
+            <!-- BRAND -->
+
+            <div class="footer-brand">
+
+                <img
+                    src="{{ url_for('static', filename='images/logo.png') }}"
+                    alt="My Online Shop"
+                    class="footer-logo"
+                >
+
+                <h3>
+                    My Online Shop
+                </h3>
+
+                <p>
+                    Smart shopping made simple.
+                    Discover products, explore new collections
+                    and enjoy an AI-powered shopping experience.
+                </p>
+
+
+                <!-- SOCIAL -->
+
+                <div class="footer-social">
+
+                    <a
+                        href="https://www.facebook.com/"
+                        target="_blank"
+                        title="Facebook"
+                    >
+                        f
+                    </a>
+
+                    <a
+                        href="https://www.instagram.com/"
+                        target="_blank"
+                        title="Instagram"
+                    >
+                        ◎
+                    </a>
+
+                    <a
+                        href="https://www.youtube.com/"
+                        target="_blank"
+                        title="YouTube"
+                    >
+                        ▶
+                    </a>
+
+                    <a
+                        href="https://x.com/"
+                        target="_blank"
+                        title="X"
+                    >
+                        𝕏
+                    </a>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SHOP -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Shop
+                </h3>
+
+                <a href="/products">
+                    All Products
+                </a>
+
+                <a href="/products?category=Kids">
+                    Kids
+                </a>
+
+                <a href="/products?category=Mens">
+                    Mens
+                </a>
+
+                <a href="/products?category=Womens">
+                    Womens
+                </a>
+
+                <a href="/products?category=Electronics">
+                    Electronics
+                </a>
+
+            </div>
+
+
+
+            <!-- ACCOUNT -->
+
+            <div class="footer-column">
+
+                <h3>
+                    My Account
+                </h3>
+
+                <a href="/Account">
+                    Account
+                </a>
+
+                <a href="/Wishlist">
+                    Wishlist
+                </a>
+
+                <a href="/cart">
+                    Shopping Cart
+                </a>
+
+                <a href="/orders">
+                    My Orders
+                </a>
+
+                <a href="/checkout">
+                    Checkout
+                </a>
+
+            </div>
+
+
+
+            <!-- CUSTOMER SERVICE -->
+
+            <div class="footer-column">
+
+                <h3>
+                    Customer Service
+                </h3>
+
+                <a href="/products">
+                    Help Center
+                </a>
+
+                <a href="/products">
+                    Delivery Information
+                </a>
+
+                <a href="/products">
+                    Returns & Refunds
+                </a>
+
+                <a href="/products">
+                    Privacy Policy
+                </a>
+
+                <a href="/products">
+                    Terms & Conditions
+                </a>
+
+            </div>
+
+
+
+            <!-- NEWSLETTER -->
+
+            <div class="footer-newsletter">
+
+                <h3>
+                    Stay in the loop
+                </h3>
+
+                <p>
+                    Get updates about new products,
+                    special offers and smarter shopping.
+                </p>
+
+
+                <form
+                    id="newsletter-form"
+                    onsubmit="return subscribeNewsletter(event)"
+                >
+
+                    <input
+                        type="email"
+                        id="newsletter-email"
+                        placeholder="Enter your email"
+                        required
+                    >
+
+                    <button type="submit">
+                        →
+                    </button>
+
+                </form>
+
+
+                <small id="newsletter-message">
+                    🔒 Your email is kept private.
+                </small>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             TRUST BAR
+        ================================================== -->
+
+        <div class="footer-trust">
+
+
+            <div>
+
+                <span>
+                    ✓
+                </span>
+
+                <div>
+
+                    <strong>
+                        Secure Payments
+                    </strong>
+
+                    <small>
+                        Safe & protected checkout
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ↗
+                </span>
+
+                <div>
+
+                    <strong>
+                        Fast Delivery
+                    </strong>
+
+                    <small>
+                        Quick order delivery
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ↩
+                </span>
+
+                <div>
+
+                    <strong>
+                        Easy Returns
+                    </strong>
+
+                    <small>
+                        Hassle-free returns
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    ✦
+                </span>
+
+                <div>
+
+                    <strong>
+                        AI Powered
+                    </strong>
+
+                    <small>
+                        Smart recommendations
+                    </small>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             CREATOR / DEVELOPER SECTION
+        ================================================== -->
+
+        <!-- =================================================
+     CREATOR / DEVELOPER
+================================================== -->
+
+<div class="footer-creator">
+
+    <div class="creator-brand">
+        <img src="{{ url_for('static', filename='images/logo.png') }}"
+             alt="Website Logo">
+
+        <div>
+            <span>Designed & Developed by</span>
+            <strong>SHIV SHANT SHIVAM</strong>
+        </div>
+    </div>
+
+
+    <div class="creator-center">
+
+        <p>Built with Python • Flask • MySQL • JavaScript • AI</p>
+
+        <div class="creator-social">
+
+            <!-- Instagram -->
+            <a href="https://www.instagram.com/shivshantshivam/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="Instagram">
+                <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="5"></rect>
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <circle cx="17.5" cy="6.5" r="1"></circle>
+                </svg>
+            </a>
+
+            <!-- GitHub -->
+            <a href="https://github.com/shivshantshivam"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="GitHub">
+                <svg viewBox="0 0 24 24">
+                    <path d="M9 19c-4 1-4-2-5-2"></path>
+                    <path d="M15 21v-3.5c0-1 .1-1.5-.5-2
+                    3.5-.4 7-1.7 7-7.5
+                    0-1.5-.5-2.7-1.3-3.7
+                    .1-.4.6-1.9-.1-3.7
+                    0 0-1.1-.4-3.7 1.4
+                    -1-.3-2-.5-3-.5
+                    s-2 .2-3 .5
+                    C7.7 1.2 6.6 1.6 6.6 1.6
+                    c-.7 1.8-.2 3.3-.1 3.7
+                    C5.7 6.3 5.2 7.5 5.2 9
+                    c0 5.8 3.5 7.1 7 7.5
+                    -.4.4-.5 1-.5 2V21"></path>
+                </svg>
+            </a>
+
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/in/shivshantshivam/"
+               target="_blank"
+               rel="noopener noreferrer"
+               title="LinkedIn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M6 8v12"></path>
+                    <path d="M6 4v.01"></path>
+                    <path d="M10 12v8"></path>
+                    <path d="M10 20v-7a4 4 0 0 1 8 0v7"></path>
+                </svg>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+        <!-- =================================================
+             FOOTER BOTTOM
+        ================================================== -->
+
+        <div class="footer-bottom">
+
+
+            <p>
+                © 2026 My Online Shop. All rights reserved.
+            </p>
+
+
+            <div>
+
+                <a href="/products">
+                    Privacy
+                </a>
+
+                <a href="/products">
+                    Terms
+                </a>
+
+                <a href="/products">
+                    Help
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+    </footer>
+
+
+
+    <!-- =====================================================
+         AI CHATBOT
+    ====================================================== -->
+
+    <div class="chatbot" id="chatbot">
+
+    <button id="chat-button" type="button" title="AI Assistant">
+        <span class="ai-logo">✦</span>
+    </button>
+
+    <div class="chat-box" id="chat-box">
+
+        <div class="chat-header">
+
+            <div class="chat-title">
+
+                <div class="chat-logo">
+                    <span>✦</span>
+                </div>
+
+                <div>
+                    <div class="chat-title-main">AI Assistant</div>
+                    <div class="chat-status">
+                        <span></span>
+                        Online
+                    </div>
+                </div>
+
+            </div>
+
+            <button id="close-chat" type="button">×</button>
+
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+
+            <p class="bot-message">
+                Hello! How can I help you today?
+            </p>
+
+        </div>
+
+        <div class="chat-input">
+
+            <input
+                type="text"
+                id="chat-input"
+                placeholder="Ask me anything..."
+            >
+
+            <button
+                id="send-button"
+                type="button"
+            >
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='j-Script/chatbot.js') }}"></script>
+<script src="{{ url_for('static', filename='j-Script/home.js') }}"></script>
+
+
+    <!-- NEWSLETTER SCRIPT -->
+
+    <script>
+
+        function subscribeNewsletter(event) {
+
+            event.preventDefault();
+
+            const email =
+                document.getElementById("newsletter-email");
+
+            const message =
+                document.getElementById("newsletter-message");
+
+
+            if (email.value.trim() !== "") {
+
+                message.textContent =
+                    "✓ Thanks! You're on the list.";
+
+                email.value = "";
+
+            }
+
+            return false;
+        }
+
+    </script>
+
+
+</body>
+
+</html>

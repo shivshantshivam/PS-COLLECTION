@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Recommended Products{% endblock %}
+
+{% block content %}
+
+<div class="recommendations-page">
+
+    <!-- HEADER -->
+    <section class="recommendations-hero">
+
+        <div class="recommendations-hero-content">
+
+            <span class="recommendations-label">
+                ✦ AI CURATED FOR YOU
+            </span>
+
+            <h1>
+                You may also<br>
+                <strong>like these.</strong>
+            </h1>
+
+            <p>
+                Discover products selected based on
+                similar categories and your shopping interests.
+            </p>
+
+        </div>
+
+        <div class="recommendations-hero-mark">
+            <span>AI</span>
+            <small>SMART PICKS</small>
+        </div>
+
+    </section>
+
+
+    <!-- PRODUCTS -->
+    {% if recommended %}
+
+    <section class="recommendations-section">
+
+        <div class="recommendations-heading">
+
+            <div>
+
+                <span>
+                    RECOMMENDED COLLECTION
+                </span>
+
+                <h2>
+                    Similar Products
+                </h2>
+
+            </div>
+
+            <a href="/products">
+                Explore Store →
+            </a>
+
+        </div>
+
+
+        <div class="recommendations-grid">
+
+            {% for product in recommended %}
+
+            <article class="recommendation-card">
+
+                <!-- IMAGE -->
+
+                <div class="recommendation-image">
+
+                    {% if product.image %}
+
+                    <img
+                        src="{{ url_for('static', filename='images/' + product.image) }}"
+                        alt="{{ product.name }}"
+                    >
+
+                    {% else %}
+
+                    <div class="recommendation-no-image">
+                        No Image
+                    </div>
+
+                    {% endif %}
+
+
+                    <span class="recommendation-badge">
+                        AI PICK
+                    </span>
+
+
+                    <a
+                        href="/add-to-wishlist/{{ product.id }}"
+                        class="recommendation-wishlist"
+                        title="Add to Wishlist"
+                    >
+                        ♡
+                    </a>
+
+                </div>
+
+
+                <!-- INFO -->
+
+                <div class="recommendation-info">
+
+                    {% if product.category %}
+
+                    <span class="recommendation-category">
+                        {{ product.category }}
+                    </span>
+
+                    {% endif %}
+
+
+                    <h3>
+                        {{ product.name }}
+                    </h3>
+
+
+                    {% if product.description %}
+
+                    <p class="recommendation-description">
+                        {{ product.description }}
+                    </p>
+
+                    {% endif %}
+
+
+                    <div class="recommendation-rating">
+
+                        <span>
+                            ★★★★★
+                        </span>
+
+                        <small>
+                            AI selected
+                        </small>
+
+                    </div>
+
+
+                    <!-- BOTTOM -->
+
+                    <div class="recommendation-bottom">
+
+                        <strong>
+                            ₹{{ product.price }}
+                        </strong>
+
+
+                        <form
+                            action="/add-to-cart"
+                            method="POST"
+                        >
+
+                            <input
+                                type="hidden"
+                                name="product_id"
+                                value="{{ product.id }}"
+                            >
+
+                            <button
+                                type="submit"
+                                class="recommendation-cart"
+                            >
+                                🛒 Add to Cart
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+    {% else %}
+
+    <!-- EMPTY STATE -->
+
+    <section class="recommendations-empty">
+
+        <div class="empty-icon">
+            ✦
+        </div>
+
+        <span>
+            AI RECOMMENDATIONS
+        </span>
+
+        <h2>
+            No similar products yet.
+        </h2>
+
+        <p>
+            We couldn't find similar products right now.
+            Explore our full collection instead.
+        </p>
+
+        <a href="/products">
+            Browse Products →
+        </a>
+
+    </section>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

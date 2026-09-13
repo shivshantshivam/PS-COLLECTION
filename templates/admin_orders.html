@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Orders{% endblock %}
+
+{% block content %}
+
+<div class="admin-orders-page">
+
+    <!-- HEADER -->
+
+    <div class="admin-orders-top">
+
+        <div>
+            <span class="admin-orders-eyebrow">
+                ORDER MANAGEMENT
+            </span>
+
+            <h2>Manage Orders</h2>
+
+            <p>
+                View and manage customer orders
+            </p>
+        </div>
+
+        <div class="orders-total">
+
+            <span class="orders-total-number">
+                {{ orders|length }}
+            </span>
+
+            <span class="orders-total-text">
+                Total Orders
+            </span>
+
+        </div>
+
+    </div>
+
+
+    {% if orders %}
+
+    <!-- ORDER LIST -->
+
+    <div class="admin-order-list">
+
+        {% for order in orders %}
+
+        <div class="admin-order-card">
+
+            <!-- CARD TOP -->
+
+            <div class="order-card-top">
+
+                <div class="order-number">
+
+                    <span class="order-label">
+                        ORDER
+                    </span>
+
+                    <h3>
+                        #{{ order.id }}
+                    </h3>
+
+                </div>
+
+                <span class="order-status {{ order.status|lower }}">
+                    {{ order.status }}
+                </span>
+
+            </div>
+
+
+            <!-- ORDER DETAILS -->
+
+            <div class="order-card-details">
+
+                <div class="order-detail">
+
+                    <span class="detail-label">
+                        Customer
+                    </span>
+
+                    <strong>
+                        {{ order.name }}
+                    </strong>
+
+                    <small>
+                        {{ order.email }}
+                    </small>
+
+                </div>
+
+
+                <div class="order-detail">
+
+                    <span class="detail-label">
+                        Order Date
+                    </span>
+
+                    <strong>
+                        {{ order.created_at }}
+                    </strong>
+
+                </div>
+
+
+                <div class="order-detail">
+
+                    <span class="detail-label">
+                        Total Amount
+                    </span>
+
+                    <strong class="order-price">
+                        ₹{{ "%.2f"|format(order.total_amount) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="order-card-bottom">
+
+                <form
+                    action="/admin/update-order/{{ order.id }}"
+                    method="POST"
+                    class="order-action"
+                >
+
+                    <select name="status">
+
+                        <option
+                            value="Pending"
+                            {% if order.status == "Pending" %}selected{% endif %}
+                        >
+                            Pending
+                        </option>
+
+                        <option
+                            value="Processing"
+                            {% if order.status == "Processing" %}selected{% endif %}
+                        >
+                            Processing
+                        </option>
+
+                        <option
+                            value="Shipped"
+                            {% if order.status == "Shipped" %}selected{% endif %}
+                        >
+                            Shipped
+                        </option>
+
+                        <option
+                            value="Delivered"
+                            {% if order.status == "Delivered" %}selected{% endif %}
+                        >
+                            Delivered
+                        </option>
+
+                    </select>
+
+
+                    <button type="submit" class="update-order-btn">
+                        Update Status
+                    </button>
+
+                </form>
+
+
+                <form
+                    action="/admin/delete-order/{{ order.id }}"
+                    method="POST"
+                    class="delete-order-form"
+                    onsubmit="return confirm('Are you sure you want to delete this order?');"
+                >
+
+                    <button
+                        type="submit"
+                        class="delete-order-btn"
+                    >
+                        Delete
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    {% else %}
+
+    <!-- EMPTY -->
+
+    <div class="admin-orders-empty">
+
+        <div class="empty-order-icon">
+            ✓
+        </div>
+
+        <h3>
+            No orders yet
+        </h3>
+
+        <p>
+            Orders will appear here when customers place them.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Wishlist
+{% endblock %}
+
+{% block content %}
+
+<div class="wishlist-page">
+
+    <div class="wishlist-title">
+        <h2>My Wishlist</h2>
+        <p>{{ wishlist_items|length }} items saved</p>
+    </div>
+
+
+    {% if wishlist_items %}
+
+        <div class="wishlist-grid">
+
+            {% for item in wishlist_items %}
+
+                <div class="wishlist-card">
+
+                    <div class="wishlist-image">
+
+                        <img
+                            src="{{ url_for('static', filename='images/' + item.image) }}"
+                            alt="{{ item.name }}"
+                        >
+
+                        <div class="wishlist-heart">
+                            ♥
+                        </div>
+
+                    </div>
+
+
+                    <div class="wishlist-info">
+
+                        <h3>{{ item.name }}</h3>
+
+                        <div class="wishlist-price">
+                            ₹{{ item.price }}
+                        </div>
+
+                        <p class="wishlist-description">
+                            {{ item.description }}
+                        </p>
+
+
+                        <div class="wishlist-actions">
+
+                            <form
+                                action="/add-to-cart"
+                                method="POST"
+                            >
+
+                                <input
+                                    type="hidden"
+                                    name="product_id"
+                                    value="{{ item.product_id }}"
+                                >
+
+                                <button
+                                    type="submit"
+                                    class="wishlist-cart-btn"
+                                >
+                                    Add to Cart
+                                </button>
+
+                            </form>
+
+
+                            <a
+                                href="/remove-from-wishlist/{{ item.id }}"
+                                class="wishlist-remove-btn"
+                            >
+                                Remove
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="wishlist-empty">
+
+            <div class="empty-heart">
+                ♡
+            </div>
+
+            <h3>Your Wishlist is Empty</h3>
+
+            <p>
+                You haven't saved any products yet.
+            </p>
+
+            <a href="/products">
+                Continue Shopping
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

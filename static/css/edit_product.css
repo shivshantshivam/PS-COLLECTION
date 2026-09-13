@@ -1,0 +1,430 @@
+/* =========================================
+   EDIT PRODUCT PAGE
+========================================= */
+
+.edit-product-page {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 55px 35px 90px;
+}
+
+
+/* =========================================
+   HEADER
+========================================= */
+
+.edit-product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.edit-eyebrow {
+    margin: 0 0 9px;
+    color: #6a2e2e;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.edit-product-header h1 {
+    margin: 0;
+    color: #191919;
+    font-size: 36px;
+    font-weight: 650;
+    letter-spacing: -1px;
+}
+
+.edit-product-header p:not(.edit-eyebrow) {
+    margin: 9px 0 0;
+    color: #929292;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+
+/* Back Button */
+
+.back-admin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 17px;
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    background: #fff;
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 650;
+    transition: all 0.25s ease;
+}
+
+.back-admin-btn:hover {
+    border-color: #c8c8c8;
+    background: #f8f8f8;
+    transform: translateY(-2px);
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.edit-product-card {
+    display: grid;
+    grid-template-columns: 370px 1fr;
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 20px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
+}
+
+
+/* =========================================
+   PRODUCT PREVIEW
+========================================= */
+
+.edit-product-preview {
+    padding: 30px;
+    background: #faf8f8;
+    border-right: 1px solid #ededed;
+}
+
+.preview-label {
+    margin-bottom: 18px;
+    color: #999;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+}
+
+.preview-image {
+    width: 100%;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid #ededed;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.preview-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 18px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.preview-image:hover img {
+    transform: scale(1.04);
+}
+
+.no-preview {
+    text-align: center;
+    color: #aaa;
+}
+
+.no-preview span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 35px;
+}
+
+.no-preview p {
+    margin: 0;
+    font-size: 12px;
+}
+
+.preview-info {
+    padding-top: 22px;
+}
+
+.preview-category {
+    display: inline-flex;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #eee7e7;
+    color: #6a2e2e;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.preview-info h2 {
+    margin: 13px 0 7px;
+    color: #242424;
+    font-size: 21px;
+    font-weight: 650;
+    line-height: 1.3;
+}
+
+.preview-price {
+    margin: 0;
+    color: #6a2e2e;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   FORM AREA
+========================================= */
+
+.edit-product-form-area {
+    padding: 35px 38px;
+}
+
+.form-heading {
+    margin-bottom: 28px;
+}
+
+.form-heading > span {
+    color: #a0a0a0;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.form-heading h2 {
+    margin: 7px 0 5px;
+    color: #222;
+    font-size: 23px;
+    font-weight: 650;
+}
+
+.form-heading p {
+    margin: 0;
+    color: #999;
+    font-size: 12px;
+}
+
+
+/* =========================================
+   FORM
+========================================= */
+
+.premium-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 17px;
+}
+
+.premium-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.premium-form-group label {
+    color: #555;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.premium-form-group input,
+.premium-form-group textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #dedede;
+    border-radius: 10px;
+    outline: none;
+    background: #fff;
+    color: #222;
+    font-family: inherit;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.premium-form-group input {
+    height: 45px;
+    padding: 0 13px;
+}
+
+.premium-form-group textarea {
+    min-height: 125px;
+    padding: 13px;
+    resize: vertical;
+    line-height: 1.55;
+}
+
+.premium-form-group input::placeholder,
+.premium-form-group textarea::placeholder {
+    color: #b4b4b4;
+}
+
+.premium-form-group input:focus,
+.premium-form-group textarea:focus {
+    border-color: #6a2e2e;
+    box-shadow: 0 0 0 3px rgba(106, 46, 46, 0.07);
+}
+
+
+/* Price */
+
+.price-input {
+    position: relative;
+}
+
+.price-input > span {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.price-input input {
+    padding-left: 30px;
+}
+
+
+/* =========================================
+   DIVIDER
+========================================= */
+
+.form-divider {
+    height: 1px;
+    margin-top: 3px;
+    background: #eeeeee;
+}
+
+
+/* =========================================
+   ACTIONS
+========================================= */
+
+.edit-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 2px;
+}
+
+.cancel-edit-btn,
+.save-product-btn {
+    height: 43px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.cancel-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #dedede;
+    background: #fff;
+    color: #666;
+}
+
+.cancel-edit-btn:hover {
+    background: #f7f7f7;
+}
+
+.save-product-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: none;
+    background: #6a2e2e;
+    color: #fff;
+}
+
+.save-product-btn span {
+    font-size: 13px;
+}
+
+.save-product-btn:hover {
+    background: #572525;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(106, 46, 46, 0.18);
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .edit-product-page {
+        padding: 35px 20px 60px;
+    }
+
+    .edit-product-card {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-product-preview {
+        border-right: none;
+        border-bottom: 1px solid #ededed;
+    }
+
+    .preview-image {
+        height: 260px;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .edit-product-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .edit-product-header h1 {
+        font-size: 30px;
+    }
+
+    .edit-product-header {
+        gap: 18px;
+    }
+
+    .back-admin-btn {
+        width: 100%;
+    }
+
+    .edit-product-preview,
+    .edit-product-form-area {
+        padding: 24px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .edit-form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .cancel-edit-btn,
+    .save-product-btn {
+        width: 100%;
+    }
+}

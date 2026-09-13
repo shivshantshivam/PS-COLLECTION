@@ -1,0 +1,273 @@
+.wishlist-page {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 35px 30px;
+}
+
+
+/* ==========================
+   TITLE
+========================== */
+
+.wishlist-title {
+    margin-bottom: 30px;
+}
+
+.wishlist-title h2 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.wishlist-title p {
+    margin: 7px 0 0;
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* ==========================
+   PRODUCT GRID
+========================== */
+
+.wishlist-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 25px;
+}
+
+
+/* ==========================
+   CARD
+========================== */
+
+.wishlist-card {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: 0.2s ease;
+}
+
+.wishlist-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ==========================
+   IMAGE
+========================== */
+
+.wishlist-image {
+    position: relative;
+    height: 230px;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.wishlist-image img {
+    max-width: 100%;
+    max-height: 190px;
+    object-fit: contain;
+}
+
+
+/* ==========================
+   HEART
+========================== */
+
+.wishlist-heart {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: white;
+    border-radius: 50%;
+
+    font-size: 18px;
+    color: #e63946;
+
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ==========================
+   PRODUCT INFO
+========================== */
+
+.wishlist-info {
+    padding: 20px;
+}
+
+.wishlist-info h3 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.wishlist-price {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.wishlist-description {
+    min-height: 42px;
+    margin: 0 0 20px;
+
+    color: #777;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+/* ==========================
+   ACTIONS
+========================== */
+
+.wishlist-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.wishlist-actions form {
+    flex: 1;
+    margin: 0;
+}
+
+
+/* ADD TO CART */
+
+.wishlist-cart-btn {
+    width: 100%;
+    padding: 11px 15px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #6a2e2e;
+    color: white;
+
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.wishlist-cart-btn:hover {
+    opacity: 0.9;
+}
+
+
+/* REMOVE */
+
+.wishlist-remove-btn {
+    padding: 10px 15px;
+
+    border: 1px solid #ddd;
+    border-radius: 6px;
+
+    color: #555;
+    background: white;
+
+    text-decoration: none;
+    font-size: 14px;
+
+    white-space: nowrap;
+}
+
+.wishlist-remove-btn:hover {
+    border-color: #d9534f;
+    color: #d9534f;
+}
+
+
+/* ==========================
+   EMPTY WISHLIST
+========================== */
+
+.wishlist-empty {
+    text-align: center;
+
+    padding: 80px 20px;
+
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 10px;
+}
+
+.empty-heart {
+    font-size: 55px;
+    color: #bbb;
+    margin-bottom: 15px;
+}
+
+.wishlist-empty h3 {
+    margin: 0 0 10px;
+    font-size: 22px;
+}
+
+.wishlist-empty p {
+    margin-bottom: 25px;
+    color: #777;
+}
+
+.wishlist-empty a {
+    display: inline-block;
+
+    padding: 11px 22px;
+
+    background: #6a2e2e;
+    color: white;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+    font-size: 14px;
+}
+
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media (max-width: 900px) {
+
+    .wishlist-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .wishlist-page {
+        padding: 25px 15px;
+    }
+
+    .wishlist-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .wishlist-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .wishlist-remove-btn {
+        text-align: center;
+    }
+
+}
