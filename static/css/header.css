@@ -282,3 +282,133 @@ header .search-box button {
     height: 22px;
     stroke-width: 2.5;
 }
+
+/* MOBILE HEADER */
+@media (max-width: 600px) {
+
+    header {
+        height: 64px;
+        padding: 0 10px;
+        gap: 8px;
+    }
+
+    /* Logo */
+    header h2 {
+        flex-shrink: 0;
+    }
+
+    .logo-img {
+        width: 72px;
+    }
+
+    /* Hide category navigation on mobile */
+    .left-nav {
+        display: none;
+    }
+
+
+    /* Right side */
+    .right-nav {
+        margin-left: auto;
+        gap: 7px;
+        min-width: 0;
+    }
+
+
+    /* Search */
+    header .search-box {
+        width: 95px;
+        height: 36px;
+        flex-shrink: 1;
+    }
+
+    header .search-box input {
+        min-width: 0;
+        padding: 0 7px;
+        font-size: 12px;
+    }
+
+    header .search-box input::placeholder {
+        color: #94969f;
+    }
+
+    header .search-box button {
+        width: 30px;
+        font-size: 14px;
+        padding: 0;
+    }
+
+
+    /* Account / Wishlist / Cart / Admin */
+    .header-icon-link {
+        min-width: 28px;
+        width: 28px;
+        gap: 0;
+    }
+
+    .header-icon-link > span:last-child {
+        display: none;
+    }
+
+    .header-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .header-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .admin-link .header-icon svg {
+        width: 21px;
+        height: 21px;
+    }
+}
+
+
+/* Extra small phones */
+@media (max-width: 360px) {
+
+    header {
+        padding: 0 7px;
+        gap: 5px;
+    }
+
+    .logo-img {
+        width: 65px;
+    }
+
+    .right-nav {
+        gap: 5px;
+    }
+
+    header .search-box {
+        width: 82px;
+    }
+
+    header .search-box input {
+        padding: 0 5px;
+        font-size: 11px;
+    }
+
+    header .search-box button {
+        width: 26px;
+        font-size: 13px;
+    }
+
+    .header-icon-link {
+        min-width: 26px;
+        width: 26px;
+    }
+
+    .header-icon {
+        width: 26px;
+        height: 26px;
+    }
+
+    .header-icon svg {
+        width: 21px;
+        height: 21px;
+    }
+}
