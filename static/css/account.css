@@ -241,10 +241,8 @@
     font-size: 14px;
 }
 
-/* ==========================
-   LOGIN PAGE
-========================== */
 
+/* LOGIN PAGE */
 .login-page {
     min-height: 70vh;
     display: flex;
@@ -361,6 +359,120 @@
     }
 
     .login-box h2 {
+        font-size: 24px;
+    }
+}
+
+
+/* REGISTER PAGE */
+.register-page {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    box-sizing: border-box;
+}
+
+.register-box {
+    width: 100%;
+    max-width: 420px;
+    background: #ffffff;
+    padding: 38px;
+    border: 1px solid #eeeeee;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+}
+
+.register-box h2 {
+    margin: 0 0 8px;
+    text-align: center;
+    font-size: 28px;
+    color: #282c3f;
+}
+
+.register-subtitle {
+    margin: 0 0 28px;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid #dddddd;
+    border-radius: 7px;
+    outline: none;
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: #6a2e2e;
+    box-shadow: 0 0 0 3px rgba(106, 46, 46, 0.08);
+}
+
+.register-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 7px;
+    background: #6a2e2e;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.register-btn:hover {
+    background: #572525;
+    transform: translateY(-1px);
+}
+
+.login-text {
+    margin: 22px 0 0;
+    text-align: center;
+    font-size: 14px;
+    color: #777;
+}
+
+.login-text a {
+    color: #6a2e2e;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-text a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+
+    .register-page {
+        padding: 25px 15px;
+    }
+
+    .register-box {
+        padding: 25px 20px;
+    }
+
+    .register-box h2 {
         font-size: 24px;
     }
 }
