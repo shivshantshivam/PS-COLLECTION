@@ -7,6 +7,7 @@ import os
 import random
 import smtplib
 from email.message import EmailMessage
+import requests
 
 app = Flask(__name__)
 
@@ -387,30 +388,27 @@ def register():
 
         try:
 
-            message = EmailMessage()
-
-            message["Subject"] = "E-Commerce Email Verification"
-            message["From"] = os.getenv("MAIL_EMAIL")
-            message["To"] = email
-
-            message.set_content(
-                f"Your OTP for email verification is: {otp}\n\n"
-                "Please enter this OTP on the website to verify your email."
+            response = requests.post(
+                "https://api.resend.com/emails",
+                headers={
+                    "Authorization": f"Bearer {os.getenv('RESEND_API_KEY')}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "from": "onboarding@resend.dev",
+                    "to": [email],
+                    "subject": "E-Commerce Email Verification",
+                    "text": (
+                        f"Your OTP for email verification is: {otp}\n\n"
+                        "Please enter this OTP on the website to verify your email."
+                    )
+                },
+                timeout=10
             )
 
-            with smtplib.SMTP_SSL(
-                            "smtp.gmail.com",
-                            465,
-                            timeout=10
-                        ) as server:
-
-                
-                server.login(
-                    os.getenv("MAIL_EMAIL"),
-                    os.getenv("MAIL_PASSWORD")
-                )
-
-                server.send_message(message)
+            if response.status_code >= 400:
+                print("Resend error:", response.text)
+                raise Exception("Resend email failed")
 
         except Exception as e:
 
