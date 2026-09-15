@@ -398,8 +398,13 @@ def register():
                 "Please enter this OTP on the website to verify your email."
             )
 
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            with smtplib.SMTP_SSL(
+                            "smtp.gmail.com",
+                            465,
+                            timeout=10
+                        ) as server:
 
+                
                 server.login(
                     os.getenv("MAIL_EMAIL"),
                     os.getenv("MAIL_PASSWORD")
