@@ -374,54 +374,25 @@ def register():
 
         existing_user = cursor.fetchone()
 
-        cursor.close()
-
         if existing_user:
+            cursor.close()
             return "Email already exists"
 
-        otp = str(random.randint(100000, 999999))
+        hashed_password = generate_password_hash(password)
 
-        session["register_name"] = name
-        session["register_email"] = email
-        session["register_password"] = generate_password_hash(password)
-        session["register_otp"] = otp
+        cursor.execute(
+            """
+            INSERT INTO users
+            (name, email, password, email_verified)
+            VALUES (%s, %s, %s, %s)
+            """,
+            (name, email, hashed_password, True)
+        )
 
-        try:
+        db.commit()
+        cursor.close()
 
-            response = requests.post(
-                "https://api.resend.com/emails",
-                headers={
-                    "Authorization": f"Bearer {os.getenv('RESEND_API_KEY')}",
-                    "Content-Type": "application/json"
-                },
-                json={
-                    "from": "onboarding@resend.dev",
-                    "to": [email],
-                    "subject": "E-Commerce Email Verification",
-                    "text": (
-                        f"Your OTP for email verification is: {otp}\n\n"
-                        "Please enter this OTP on the website to verify your email."
-                    )
-                },
-                timeout=10
-            )
-
-            if response.status_code >= 400:
-                print("Resend error:", response.text)
-                raise Exception("Resend email failed")
-
-        except Exception as e:
-
-            print("Email error:", e)
-
-            session.pop("register_name", None)
-            session.pop("register_email", None)
-            session.pop("register_password", None)
-            session.pop("register_otp", None)
-
-            return "Unable to send OTP email"
-
-        return redirect(url_for("verify_otp"))
+        return redirect(url_for("login"))
 
     return render_template("register.html")
 
@@ -497,17 +468,6 @@ def login():
         user = cursor.fetchone()
 
         if user and check_password_hash(user["password"], password):
-
-            if not user["email_verified"]:
-
-                cursor.close()
-
-                error = "Please verify your email first"
-
-                return render_template(
-                    "login.html",
-                    error=error
-                )
 
             cursor.execute(
                 """
