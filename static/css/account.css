@@ -476,3 +476,44 @@
         font-size: 24px;
     }
 }
+
+.password-field {
+    position: relative;
+    width: 100%;
+    margin-bottom: 18px;
+}
+
+
+.login-box .password-field input {
+    width: 100%;
+    padding-right: 40px;
+    margin-bottom: 0;
+}
+
+.register-box .password-field {
+    margin-bottom: 0;
+}
+
+.password-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    color: #555;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.password-eye svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.password-eye:hover {
+    color: #222;
+}

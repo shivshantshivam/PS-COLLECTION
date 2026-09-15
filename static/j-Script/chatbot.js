@@ -1,20 +1,21 @@
 const chatbot = document.getElementById("chatbot");
-
 const chatButton = document.getElementById("chat-button");
 const chatBox = document.getElementById("chat-box");
 const closeChat = document.getElementById("close-chat");
-
 const sendButton = document.getElementById("send-button");
 const chatInput = document.getElementById("chat-input");
 const chatMessages = document.getElementById("chat-messages");
 
-
-/* =========================
-   OPEN / CLOSE CHAT
-========================= */
-
 let wasDragging = false;
+let isDragging = false;
 
+let startX = 0;
+let startY = 0;
+let startLeft = 0;
+let startTop = 0;
+
+
+/* OPEN CHAT */
 chatButton.addEventListener("click", function () {
 
     if (wasDragging) {
@@ -24,38 +25,20 @@ chatButton.addEventListener("click", function () {
 
     chatBox.style.display = "block";
 
-    positionChatBox();
-
+    requestAnimationFrame(function () {
+        positionChatBox();
+        chatInput.focus();
+    });
 });
 
 
+/* CLOSE CHAT */
 closeChat.addEventListener("click", function () {
-
     chatBox.style.display = "none";
-
 });
 
 
-/* =========================
-   SEND MESSAGE
-========================= */
-
-sendButton.addEventListener("click", sendMessage);
-
-
-chatInput.addEventListener("keypress", function (event) {
-
-    if (event.key === "Enter") {
-        sendMessage();
-    }
-
-});
-
-
-/* =========================
-   FORMAT AI RESPONSE
-========================= */
-
+/* FORMAT AI RESPONSE */
 function escapeHTML(text) {
 
     const div = document.createElement("div");
@@ -63,7 +46,6 @@ function escapeHTML(text) {
     div.textContent = text;
 
     return div.innerHTML;
-
 }
 
 
@@ -87,329 +69,234 @@ function formatAIResponse(text) {
     );
 
     return safeText;
-
 }
 
 
-/* =========================
-   SEND MESSAGE
-========================= */
+/* SEND MESSAGE */
+sendButton.addEventListener("click", sendMessage);
 
-function sendMessage() {
+chatInput.addEventListener("keydown", function (event) {
+
+    if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        sendMessage();
+    }
+});
+
+
+async function sendMessage() {
 
     const message = chatInput.value.trim();
 
-    if (message === "") {
+    if (message === "" || sendButton.disabled) {
         return;
     }
 
 
-    const userMessage =
-        document.createElement("p");
+    /* USER MESSAGE */
+    const userMessage = document.createElement("p");
 
-    userMessage.className =
-        "user-message";
+    userMessage.className = "user-message";
 
-    userMessage.textContent =
-        message;
+    userMessage.textContent = message;
 
-    chatMessages.appendChild(
-        userMessage
-    );
+    chatMessages.appendChild(userMessage);
+
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
 
-    chatMessages.scrollTop =
-        chatMessages.scrollHeight;
-
-
+    /* CLEAR INPUT */
     chatInput.value = "";
 
 
-    const botMessage =
-        document.createElement("p");
+    /* BOT MESSAGE */
+    const botMessage = document.createElement("p");
 
-    botMessage.className =
-        "bot-message";
+    botMessage.className = "bot-message";
 
-    botMessage.textContent =
-        "Thinking...";
+    botMessage.textContent = "Thinking...";
 
-    chatMessages.appendChild(
-        botMessage
-    );
+    chatMessages.appendChild(botMessage);
 
-
-    chatMessages.scrollTop =
-        chatMessages.scrollHeight;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 
 
     sendButton.disabled = true;
 
 
-    fetch("/chat", {
+    try {
 
-        method: "POST",
+        const response = await fetch("/chat", {
 
-        headers: {
-            "Content-Type": "application/json"
-        },
+            method: "POST",
 
-        body: JSON.stringify({
-            message: message
-        })
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    })
+            body: JSON.stringify({
+                message: message
+            })
+        });
 
-    .then(response => {
 
         if (!response.ok) {
             throw new Error("Server error");
         }
 
-        return response.text();
 
-    })
+        const data = await response.text();
 
-    .then(data => {
 
-        botMessage.innerHTML =
-            formatAIResponse(data);
+        botMessage.innerHTML = formatAIResponse(data);
 
-        chatMessages.scrollTop =
-            chatMessages.scrollHeight;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    })
 
-    .catch(error => {
+    } catch (error) {
+
+        console.log(error);
 
         botMessage.textContent =
             "Sorry, something went wrong. Please try again.";
 
-        console.log(error);
 
-    })
-
-    .finally(() => {
+    } finally {
 
         sendButton.disabled = false;
 
         chatInput.focus();
-
-    });
-
+    }
 }
 
 
-/* =========================
-   DRAG CHATBOT
-========================= */
+/* DRAG CHATBOT */
+chatButton.addEventListener("pointerdown", function (event) {
 
-let isDragging = false;
+    isDragging = true;
 
-let startX = 0;
-let startY = 0;
+    wasDragging = false;
 
-let startLeft = 0;
-let startTop = 0;
-
-let movedDistance = 0;
+    startX = event.clientX;
+    startY = event.clientY;
 
 
-chatButton.addEventListener(
-    "pointerdown",
-    function (event) {
+    const rect = chatbot.getBoundingClientRect();
 
-        isDragging = true;
-
-        wasDragging = false;
-
-        movedDistance = 0;
-
-        startX = event.clientX;
-        startY = event.clientY;
+    startLeft = rect.left;
+    startTop = rect.top;
 
 
-        const rect =
-            chatbot.getBoundingClientRect();
+    chatbot.style.right = "auto";
+    chatbot.style.bottom = "auto";
+
+    chatbot.style.left = startLeft + "px";
+    chatbot.style.top = startTop + "px";
 
 
-        startLeft = rect.left;
-        startTop = rect.top;
+    chatButton.setPointerCapture(event.pointerId);
+});
 
 
-        chatbot.style.right = "auto";
-        chatbot.style.bottom = "auto";
+chatButton.addEventListener("pointermove", function (event) {
 
-        chatbot.style.left =
-            startLeft + "px";
-
-        chatbot.style.top =
-            startTop + "px";
-
-
-        chatButton.setPointerCapture(
-            event.pointerId
-        );
-
+    if (!isDragging) {
+        return;
     }
-);
 
 
-chatButton.addEventListener(
-    "pointermove",
-    function (event) {
-
-        if (!isDragging) {
-            return;
-        }
+    const moveX = event.clientX - startX;
+    const moveY = event.clientY - startY;
 
 
-        const moveX =
-            event.clientX - startX;
-
-        const moveY =
-            event.clientY - startY;
-
-
-        movedDistance =
-            Math.sqrt(
-                (moveX * moveX) +
-                (moveY * moveY)
-            );
+    const distance = Math.sqrt(
+        (moveX * moveX) +
+        (moveY * moveY)
+    );
 
 
-        if (movedDistance > 5) {
-            wasDragging = true;
-        }
+    if (distance > 5) {
+        wasDragging = true;
+    }
 
 
-        if (!wasDragging) {
-            return;
-        }
+    if (!wasDragging) {
+        return;
+    }
 
 
-        let newLeft =
-            startLeft + moveX;
-
-        let newTop =
-            startTop + moveY;
+    const buttonWidth = chatButton.offsetWidth;
+    const buttonHeight = chatButton.offsetHeight;
 
 
-        /*
-           Keep chatbot button
-           inside the screen
-        */
-
-        const buttonWidth =
-            chatButton.offsetWidth;
-
-        const buttonHeight =
-            chatButton.offsetHeight;
+    let newLeft = startLeft + moveX;
+    let newTop = startTop + moveY;
 
 
-        const maxLeft =
-            window.innerWidth -
-            buttonWidth;
+    const maxLeft =
+        window.innerWidth - buttonWidth;
 
-        const maxTop =
-            window.innerHeight -
-            buttonHeight;
+    const maxTop =
+        window.innerHeight - buttonHeight;
 
 
-        newLeft =
-            Math.max(
-                0,
-                Math.min(
-                    newLeft,
-                    maxLeft
-                )
-            );
+    newLeft = Math.max(
+        0,
+        Math.min(newLeft, maxLeft)
+    );
 
 
-        newTop =
-            Math.max(
-                0,
-                Math.min(
-                    newTop,
-                    maxTop
-                )
-            );
+    newTop = Math.max(
+        0,
+        Math.min(newTop, maxTop)
+    );
 
 
-        chatbot.style.left =
-            newLeft + "px";
-
-        chatbot.style.top =
-            newTop + "px";
+    chatbot.style.left = newLeft + "px";
+    chatbot.style.top = newTop + "px";
 
 
-        /*
-           Automatically position
-           chat window near button
-        */
-
+    if (chatBox.style.display === "block") {
         positionChatBox();
-
     }
-);
+});
 
 
-chatButton.addEventListener(
-    "pointerup",
-    function (event) {
+chatButton.addEventListener("pointerup", function (event) {
 
-        isDragging = false;
+    isDragging = false;
 
-        if (
-            chatButton.hasPointerCapture(
-                event.pointerId
-            )
-        ) {
-
-            chatButton.releasePointerCapture(
-                event.pointerId
-            );
-
-        }
-
+    if (chatButton.hasPointerCapture(event.pointerId)) {
+        chatButton.releasePointerCapture(event.pointerId);
     }
-);
+});
 
 
-chatButton.addEventListener(
-    "pointercancel",
-    function () {
+chatButton.addEventListener("pointercancel", function () {
 
-        isDragging = false;
-
-    }
-);
+    isDragging = false;
+});
 
 
-/* =========================
-   CHAT WINDOW POSITION
-========================= */
-
+/* CHAT WINDOW POSITION */
 function positionChatBox() {
 
-    const rect =
-        chatbot.getBoundingClientRect();
-
-    const boxWidth =
-        chatBox.offsetWidth;
-
-    const boxHeight =
-        chatBox.offsetHeight;
-
-    const buttonWidth =
-        chatButton.offsetWidth;
-
-    const buttonHeight =
-        chatButton.offsetHeight;
+    if (chatBox.style.display !== "block") {
+        return;
+    }
 
 
-    let boxLeft =
-        rect.left;
+    const rect = chatbot.getBoundingClientRect();
+
+    const boxWidth = chatBox.offsetWidth;
+    const boxHeight = chatBox.offsetHeight;
+
+    const buttonHeight = chatButton.offsetHeight;
+
+
+    let boxLeft = rect.left;
 
     let boxTop =
         rect.top -
@@ -417,73 +304,67 @@ function positionChatBox() {
         15;
 
 
-    /*
-       If there is not enough
-       space above, put chat below
-    */
-
-    if (boxTop < 10) {
-
-        boxTop =
-            rect.top +
-            buttonHeight +
-            15;
-
-    }
-
-
-    /*
-       Keep inside left/right
-    */
-
-    if (
-        boxLeft +
-        boxWidth >
-        window.innerWidth - 10
-    ) {
+    /* MOBILE */
+    if (window.innerWidth <= 600) {
 
         boxLeft =
-            window.innerWidth -
-            boxWidth -
-            10;
-
-    }
-
-
-    if (boxLeft < 10) {
-
-        boxLeft = 10;
-
-    }
-
-
-    /*
-       Keep inside top/bottom
-    */
-
-    if (
-        boxTop +
-        boxHeight >
-        window.innerHeight - 10
-    ) {
+            (window.innerWidth - boxWidth) / 2;
 
         boxTop =
-            window.innerHeight -
-            boxHeight -
-            10;
-
+            (window.innerHeight - boxHeight) / 2;
     }
 
 
-    if (boxTop < 10) {
+    /* DESKTOP */
+    else {
 
-        boxTop = 10;
+        if (boxTop < 10) {
 
+            boxTop =
+                rect.top +
+                buttonHeight +
+                15;
+        }
+
+
+        if (
+            boxLeft +
+            boxWidth >
+            window.innerWidth - 10
+        ) {
+
+            boxLeft =
+                window.innerWidth -
+                boxWidth -
+                10;
+        }
+
+
+        if (boxLeft < 10) {
+            boxLeft = 10;
+        }
+
+
+        if (
+            boxTop +
+            boxHeight >
+            window.innerHeight - 10
+        ) {
+
+            boxTop =
+                window.innerHeight -
+                boxHeight -
+                10;
+        }
+
+
+        if (boxTop < 10) {
+            boxTop = 10;
+        }
     }
 
 
-    chatBox.style.position =
-        "fixed";
+    chatBox.style.position = "fixed";
 
     chatBox.style.left =
         boxLeft + "px";
@@ -491,30 +372,31 @@ function positionChatBox() {
     chatBox.style.top =
         boxTop + "px";
 
-    chatBox.style.right =
-        "auto";
+    chatBox.style.right = "auto";
 
-    chatBox.style.bottom =
-        "auto";
-
+    chatBox.style.bottom = "auto";
 }
 
 
-/* =========================
-   WINDOW RESIZE
-========================= */
+/* WINDOW RESIZE */
+window.addEventListener("resize", function () {
 
-window.addEventListener(
-    "resize",
-    function () {
-
-        if (
-            chatBox.style.display === "block"
-        ) {
-
-            positionChatBox();
-
-        }
-
+    if (chatBox.style.display === "block") {
+        positionChatBox();
     }
-);
+});
+
+
+/* MOBILE VIEWPORT CHANGE */
+if (window.visualViewport) {
+
+    window.visualViewport.addEventListener(
+        "resize",
+        function () {
+
+            if (chatBox.style.display === "block") {
+                positionChatBox();
+            }
+        }
+    );
+}

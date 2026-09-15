@@ -20,14 +20,17 @@ if not app.secret_key:
     raise RuntimeError("SECRET_KEY is missing")
 
 
-# MySQL connection
-db = mysql.connector.connect(
-    host=os.getenv("MYSQL_HOST", "localhost"),
-    user=os.getenv("MYSQL_USER", "root"),
-    password=os.getenv("MYSQL_PASSWORD", "9756"),
-    database=os.getenv("MYSQL_DATABASE", "ai_ecommerce"),
-    port=int(os.getenv("MYSQL_PORT", "3306"))
-)
+def get_db():
+    return mysql.connector.connect(
+        host=os.getenv("MYSQL_HOST", "localhost"),
+        user=os.getenv("MYSQL_USER", "root"),
+        password=os.getenv("MYSQL_PASSWORD", ""),
+        database=os.getenv("MYSQL_DATABASE", "ai_ecommerce"),
+        port=int(os.getenv("MYSQL_PORT", "3306"))
+    )
+
+
+db = get_db()
 
 
 def is_admin():
@@ -35,7 +38,8 @@ def is_admin():
     if "user_id" not in session:
         return False
 
-    cursor = db.cursor(dictionary=True)
+    admin_db = get_db()
+    cursor = admin_db.cursor(dictionary=True)
 
     cursor.execute(
         "SELECT is_admin FROM users WHERE id = %s",
@@ -45,8 +49,9 @@ def is_admin():
     user = cursor.fetchone()
 
     cursor.close()
+    admin_db.close()
 
-    return user and user["is_admin"]
+    return bool(user and user["is_admin"])
 
 
 # Home
@@ -211,6 +216,10 @@ def change_password():
 
         user = cursor.fetchone()
 
+        if not user:
+            cursor.close()
+            return redirect(url_for("login"))
+
         if not check_password_hash(user["password"], current_password):
 
             error = "Current password is incorrect"
@@ -364,13 +373,10 @@ def register():
 
         existing_user = cursor.fetchone()
 
-        if existing_user:
-
-            cursor.close()
-
-            return "Email already exists"
-
         cursor.close()
+
+        if existing_user:
+            return "Email already exists"
 
         otp = str(random.randint(100000, 999999))
 
@@ -528,6 +534,7 @@ def login():
         error=error
     )
 
+
 # Forgot Password
 @app.route("/forgot-password", methods=["GET", "POST"])
 def forgot_password():
@@ -539,17 +546,24 @@ def forgot_password():
         email = request.form.get("email")
 
         cursor = db.cursor(dictionary=True)
+
         cursor.execute(
             "SELECT id FROM users WHERE email = %s",
             (email,)
         )
 
         user = cursor.fetchone()
+
         cursor.close()
 
         if not user:
+
             error = "Email not found"
-            return render_template("forgot_password.html", error=error)
+
+            return render_template(
+                "forgot_password.html",
+                error=error
+            )
 
         otp = str(random.randint(100000, 999999))
 
@@ -559,6 +573,7 @@ def forgot_password():
         try:
 
             message = EmailMessage()
+
             message["Subject"] = "Password Reset OTP"
             message["From"] = os.getenv("MAIL_EMAIL")
             message["To"] = email
@@ -588,7 +603,10 @@ def forgot_password():
 
         return redirect(url_for("reset_password"))
 
-    return render_template("forgot_password.html", error=error)
+    return render_template(
+        "forgot_password.html",
+        error=error
+    )
 
 
 # Reset password
@@ -607,9 +625,11 @@ def reset_password():
         confirm_password = request.form.get("confirm_password")
 
         if otp != session["reset_otp"]:
+
             error = "Invalid OTP"
 
         elif password != confirm_password:
+
             error = "Passwords do not match"
 
         else:
@@ -631,6 +651,7 @@ def reset_password():
             )
 
             db.commit()
+
             cursor.close()
 
             session.pop("reset_email", None)
@@ -918,6 +939,9 @@ def chat():
 
     data = request.get_json()
 
+    if not data:
+        return "Please enter a message."
+
     message = data.get("message", "").strip()
 
     if not message:
@@ -1030,7 +1054,7 @@ Now answer the customer naturally.
     return response.text
 
 
-# Add product to cart
+# Cart
 @app.route("/add-to-cart", methods=["POST"])
 def add_to_cart():
 
@@ -1085,7 +1109,6 @@ def add_to_cart():
     return redirect(url_for("cart"))
 
 
-# Cart
 @app.route("/cart")
 def cart():
 
@@ -1129,7 +1152,6 @@ def cart():
     )
 
 
-# Update cart quantity
 @app.route("/update-cart/<int:cart_id>/<action>")
 def update_cart(cart_id, action):
 
@@ -1198,7 +1220,6 @@ def update_cart(cart_id, action):
     return redirect(url_for("cart"))
 
 
-# Remove item from cart
 @app.route("/remove-from-cart/<int:cart_id>")
 def remove_from_cart(cart_id):
 
@@ -1341,23 +1362,10 @@ def orders():
 @app.route("/admin")
 def admin():
 
-    if "user_id" not in session:
+    if not is_admin():
         return redirect(url_for("login"))
 
     cursor = db.cursor(dictionary=True)
-
-    cursor.execute(
-        "SELECT is_admin FROM users WHERE id = %s",
-        (session["user_id"],)
-    )
-
-    user = cursor.fetchone()
-
-    if not user or not user["is_admin"]:
-
-        cursor.close()
-
-        return "Access Denied"
 
     cursor.execute("SELECT * FROM products")
 
@@ -1375,23 +1383,10 @@ def admin():
 @app.route("/admin/orders")
 def admin_orders():
 
-    if "user_id" not in session:
-        return redirect(url_for("login"))
+    if not is_admin():
+        return "Access Denied"
 
     cursor = db.cursor(dictionary=True)
-
-    cursor.execute(
-        "SELECT is_admin FROM users WHERE id = %s",
-        (session["user_id"],)
-    )
-
-    user = cursor.fetchone()
-
-    if not user or not user["is_admin"]:
-
-        cursor.close()
-
-        return "Access Denied"
 
     cursor.execute("""
         SELECT
@@ -1424,7 +1419,8 @@ def admin_users():
     if not is_admin():
         return "Access Denied"
 
-    cursor = db.cursor(dictionary=True)
+    admin_db = get_db()
+    cursor = admin_db.cursor(dictionary=True)
 
     cursor.execute("""
         SELECT
@@ -1441,6 +1437,7 @@ def admin_users():
     users = cursor.fetchall()
 
     cursor.close()
+    admin_db.close()
 
     return render_template(
         "admin_users.html",
