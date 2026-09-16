@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import mysql.connector
 from werkzeug.security import generate_password_hash, check_password_hash
 from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 import os
 import random
@@ -13,7 +14,18 @@ app = Flask(__name__)
 
 load_dotenv()
 
-client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY"),
+    http_options=types.HttpOptions(
+        timeout=20000,
+        retry_options=types.HttpRetryOptions(
+            attempts=2,
+            initial_delay=1,
+            max_delay=3,
+            http_status_codes=[408, 429, 500, 502, 503, 504]
+        )
+    )
+)
 
 app.secret_key = os.getenv("SECRET_KEY")
 
