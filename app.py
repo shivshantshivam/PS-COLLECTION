@@ -919,7 +919,6 @@ def chat():
     """)
 
     products = cursor.fetchall()
-
     cursor.close()
 
     product_info = ""
@@ -984,6 +983,7 @@ Answer naturally like a helpful shopping assistant.
             model="gemini-3.6-flash",
             contents=prompt
         )
+
         return response.text
 
     except Exception as e:
