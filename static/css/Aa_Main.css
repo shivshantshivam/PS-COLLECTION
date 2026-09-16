@@ -14,12 +14,9 @@
 @import url("home.css");
 @import url("recommendations.css");
 @import url("admin_users.css");
-@import url("admin_products.css");
 
 
-/* =========================================================
-   GLOBAL
-========================================================= */
+/* GLOBAL */
 
 * {
     box-sizing: border-box;
