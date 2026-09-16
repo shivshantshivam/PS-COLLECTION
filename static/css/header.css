@@ -317,7 +317,7 @@ header .search-box button {
 
     /* Search */
     header .search-box {
-        width: 95px;
+        width: 220px;
         height: 36px;
         flex-shrink: 1;
     }
