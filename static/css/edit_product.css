@@ -1,17 +1,8 @@
-/* =========================================
-   EDIT PRODUCT PAGE
-========================================= */
-
 .edit-product-page {
     max-width: 1120px;
     margin: 0 auto;
     padding: 55px 35px 90px;
 }
-
-
-/* =========================================
-   HEADER
-========================================= */
 
 .edit-product-header {
     display: flex;
@@ -44,9 +35,6 @@
     line-height: 1.6;
 }
 
-
-/* Back Button */
-
 .back-admin-btn {
     display: inline-flex;
     align-items: center;
@@ -68,11 +56,6 @@
     transform: translateY(-2px);
 }
 
-
-/* =========================================
-   MAIN CARD
-========================================= */
-
 .edit-product-card {
     display: grid;
     grid-template-columns: 370px 1fr;
@@ -82,11 +65,6 @@
     border-radius: 20px;
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.06);
 }
-
-
-/* =========================================
-   PRODUCT PREVIEW
-========================================= */
 
 .edit-product-preview {
     padding: 30px;
@@ -174,11 +152,6 @@
     font-weight: 700;
 }
 
-
-/* =========================================
-   FORM AREA
-========================================= */
-
 .edit-product-form-area {
     padding: 35px 38px;
 }
@@ -206,11 +179,6 @@
     color: #999;
     font-size: 12px;
 }
-
-
-/* =========================================
-   FORM
-========================================= */
 
 .premium-edit-form {
     display: flex;
@@ -273,9 +241,6 @@
     box-shadow: 0 0 0 3px rgba(106, 46, 46, 0.07);
 }
 
-
-/* Price */
-
 .price-input {
     position: relative;
 }
@@ -294,21 +259,11 @@
     padding-left: 30px;
 }
 
-
-/* =========================================
-   DIVIDER
-========================================= */
-
 .form-divider {
     height: 1px;
     margin-top: 3px;
     background: #eeeeee;
 }
-
-
-/* =========================================
-   ACTIONS
-========================================= */
 
 .edit-form-actions {
     display: flex;
@@ -364,13 +319,7 @@
     box-shadow: 0 8px 18px rgba(106, 46, 46, 0.18);
 }
 
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
 @media (max-width: 850px) {
-
     .edit-product-page {
         padding: 35px 20px 60px;
     }
@@ -387,23 +336,17 @@
     .preview-image {
         height: 260px;
     }
-
 }
 
-
 @media (max-width: 600px) {
-
     .edit-product-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 18px;
     }
 
     .edit-product-header h1 {
         font-size: 30px;
-    }
-
-    .edit-product-header {
-        gap: 18px;
     }
 
     .back-admin-btn {

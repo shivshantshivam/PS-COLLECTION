@@ -4,10 +4,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
+load_dotenv()
 import os
 import random
-import smtplib
-from email.message import EmailMessage
+import time
 import requests
 
 app = Flask(__name__)
@@ -368,6 +368,7 @@ def account_address():
 
 
 # Register
+# Register
 @app.route("/register", methods=["GET", "POST"])
 def register():
 
@@ -390,25 +391,74 @@ def register():
             cursor.close()
             return "Email already exists"
 
-        hashed_password = generate_password_hash(password)
+        otp = str(random.randint(100000, 999999))
 
-        cursor.execute(
-            """
-            INSERT INTO users
-            (name, email, password, email_verified)
-            VALUES (%s, %s, %s, %s)
-            """,
-            (name, email, hashed_password, True)
-        )
+        session["register_name"] = name
+        session["register_email"] = email
+        session["register_password"] = generate_password_hash(password)
+        session["register_otp"] = generate_password_hash(otp)
+        session["register_otp_expires"] = int(time.time()) + 600
+        session["register_otp_attempts"] = 0
 
-        db.commit()
         cursor.close()
 
-        return redirect(url_for("login"))
+        try:
+            print("BREVO KEY EXISTS:", bool(os.getenv("BREVO_API_KEY")))
+            response = requests.post(
+                "https://api.brevo.com/v3/smtp/email",
+                headers={
+                    "accept": "application/json",
+                    "api-key": os.getenv("BREVO_API_KEY"),
+                    "content-type": "application/json"
+                },
+                json={
+                    "sender": {
+                        "name": os.getenv(
+                            "BREVO_SENDER_NAME",
+                            "PS COLLECTION"
+                        ),
+                        "email": os.getenv("BREVO_SENDER_EMAIL")
+                    },
+                    "to": [
+                        {
+                            "email": email,
+                            "name": name
+                        }
+                    ],
+                    "subject": "PS COLLECTION - Email Verification",
+                    "textContent": (
+                        f"Your OTP is: {otp}\n\n"
+                        "This OTP is valid for 10 minutes."
+                    )
+                },
+                timeout=10
+            )
+
+            if response.status_code >= 400:
+
+                print("Brevo error:", response.text)
+
+                session.pop("register_name", None)
+                session.pop("register_email", None)
+                session.pop("register_password", None)
+                session.pop("register_otp", None)
+                session.pop("register_otp_expires", None)
+                session.pop("register_otp_attempts", None)
+
+                return "Unable to send OTP email"
+
+        except Exception as e:
+
+            print("Email error:", e)
+
+            return "Unable to send OTP email"
+
+        return redirect(url_for("verify_otp"))
 
     return render_template("register.html")
 
 
+# Verify OTP
 # Verify OTP
 @app.route("/verify-otp", methods=["GET", "POST"])
 def verify_otp():
@@ -420,38 +470,54 @@ def verify_otp():
 
     if request.method == "POST":
 
-        otp = request.form.get("otp")
+        otp = request.form.get("otp", "").strip()
 
-        if otp == session["register_otp"]:
+        if session.get("register_otp_attempts", 0) >= 5:
 
-            cursor = db.cursor()
+            error = "Too many attempts. Please register again."
 
-            cursor.execute(
-                """
-                INSERT INTO users
-                (name, email, password, email_verified)
-                VALUES (%s, %s, %s, %s)
-                """,
-                (
-                    session["register_name"],
-                    session["register_email"],
-                    session["register_password"],
-                    True
+        elif int(time.time()) > session.get("register_otp_expires", 0):
+
+            error = "OTP expired. Please register again."
+
+        else:
+
+            session["register_otp_attempts"] += 1
+
+            if check_password_hash(
+                session["register_otp"],
+                otp
+            ):
+
+                cursor = db.cursor()
+
+                cursor.execute(
+                    """
+                    INSERT INTO users
+                    (name, email, password, email_verified)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    (
+                        session["register_name"],
+                        session["register_email"],
+                        session["register_password"],
+                        True
+                    )
                 )
-            )
 
-            db.commit()
+                db.commit()
+                cursor.close()
 
-            cursor.close()
+                session.pop("register_name", None)
+                session.pop("register_email", None)
+                session.pop("register_password", None)
+                session.pop("register_otp", None)
+                session.pop("register_otp_expires", None)
+                session.pop("register_otp_attempts", None)
 
-            session.pop("register_name", None)
-            session.pop("register_email", None)
-            session.pop("register_password", None)
-            session.pop("register_otp", None)
+                return redirect(url_for("login"))
 
-            return redirect(url_for("login"))
-
-        error = "Invalid OTP"
+            error = "Invalid OTP"
 
     return render_template(
         "verify_otp.html",
@@ -459,6 +525,7 @@ def verify_otp():
     )
 
 
+# Login
 # Login
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -479,7 +546,21 @@ def login():
 
         user = cursor.fetchone()
 
-        if user and check_password_hash(user["password"], password):
+        if user and check_password_hash(
+            user["password"],
+            password
+        ):
+
+            if not user["email_verified"]:
+
+                cursor.close()
+
+                error = "Please verify your email before logging in."
+
+                return render_template(
+                    "login.html",
+                    error=error
+                )
 
             cursor.execute(
                 """

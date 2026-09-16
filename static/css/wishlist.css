@@ -5,9 +5,7 @@
 }
 
 
-/* ==========================
-   TITLE
-========================== */
+/* TITLE */
 
 .wishlist-title {
     margin-bottom: 30px;
@@ -26,9 +24,7 @@
 }
 
 
-/* ==========================
-   PRODUCT GRID
-========================== */
+/*  PRODUCT GRID */
 
 .wishlist-grid {
     display: grid;
@@ -37,9 +33,7 @@
 }
 
 
-/* ==========================
-   CARD
-========================== */
+/*  CARD */
 
 .wishlist-card {
     background: white;
@@ -55,9 +49,7 @@
 }
 
 
-/* ==========================
-   IMAGE
-========================== */
+/* IMAGE */
 
 .wishlist-image {
     position: relative;
@@ -77,9 +69,7 @@
 }
 
 
-/* ==========================
-   HEART
-========================== */
+/* HEART */
 
 .wishlist-heart {
     position: absolute;
@@ -103,9 +93,7 @@
 }
 
 
-/* ==========================
-   PRODUCT INFO
-========================== */
+/* PRODUCT INFO */
 
 .wishlist-info {
     padding: 20px;
@@ -133,9 +121,7 @@
 }
 
 
-/* ==========================
-   ACTIONS
-========================== */
+/* ACTIONS */
 
 .wishlist-actions {
     display: flex;
@@ -193,9 +179,7 @@
 }
 
 
-/* ==========================
-   EMPTY WISHLIST
-========================== */
+/* EMPTY WISHLIST */
 
 .wishlist-empty {
     text-align: center;
@@ -238,9 +222,7 @@
 }
 
 
-/* ==========================
-   RESPONSIVE
-========================== */
+/* RESPONSIVE */
 
 @media (max-width: 900px) {
 

@@ -1,17 +1,8 @@
-/* =========================================
-   ADMIN PAGE
-========================================= */
-
 .admin-page {
     max-width: 1180px;
     margin: 0 auto;
     padding: 50px 35px 90px;
 }
-
-
-/* =========================================
-   ADMIN HEADER
-========================================= */
 
 .admin-header {
     display: flex;
@@ -42,11 +33,6 @@
     color: #999;
     font-size: 13px;
 }
-
-
-/* =========================================
-   HEADER BUTTONS
-========================================= */
 
 .admin-header-actions {
     display: flex;
@@ -93,11 +79,6 @@
     background: #f7f7f7;
 }
 
-
-/* =========================================
-   ADMIN SECTIONS
-========================================= */
-
 .admin-section {
     margin-bottom: 30px;
     padding: 30px;
@@ -139,11 +120,6 @@
     font-size: 10px;
     font-weight: 800;
 }
-
-
-/* =========================================
-   ADD PRODUCT FORM
-========================================= */
 
 .add-product-form {
     display: grid;
@@ -191,9 +167,6 @@
     box-shadow: 0 0 0 3px rgba(106, 46, 46, 0.07);
 }
 
-
-/* Add button */
-
 .add-product-btn {
     align-self: end;
     height: 45px;
@@ -214,21 +187,11 @@
     box-shadow: 0 8px 18px rgba(106, 46, 46, 0.15);
 }
 
-
-/* =========================================
-   PRODUCT GRID
-========================================= */
-
 .admin-product-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
 }
-
-
-/* =========================================
-   PRODUCT CARD
-========================================= */
 
 .admin-product-card {
     position: relative;
@@ -247,11 +210,6 @@
     transform: translateY(-5px);
     box-shadow: 0 16px 35px rgba(0, 0, 0, 0.08);
 }
-
-
-/* =========================================
-   PRODUCT IMAGE
-========================================= */
 
 .product-card-top {
     position: relative;
@@ -286,11 +244,6 @@
     font-size: 11px;
 }
 
-
-/* =========================================
-   CATEGORY BADGE
-========================================= */
-
 .product-category {
     position: absolute;
     top: 13px;
@@ -311,11 +264,6 @@
     letter-spacing: 0.4px;
 }
 
-
-/* =========================================
-   PRODUCT INFO
-========================================= */
-
 .product-card-info {
     flex: 1;
     padding: 19px 18px 17px;
@@ -327,7 +275,6 @@
     font-size: 15px;
     font-weight: 700;
     line-height: 1.35;
-
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
@@ -340,11 +287,6 @@
     font-size: 18px;
     font-weight: 750;
 }
-
-
-/* =========================================
-   DESCRIPTION
-========================================= */
 
 .description-box {
     padding-top: 11px;
@@ -390,11 +332,6 @@
 .description-toggle:hover {
     text-decoration: underline;
 }
-
-
-/* =========================================
-   PRODUCT ACTIONS
-========================================= */
 
 .product-card-actions {
     display: grid;
@@ -443,13 +380,7 @@
     background: #f4e1e1;
 }
 
-
-/* =========================================
-   RESPONSIVE
-========================================= */
-
 @media (max-width: 900px) {
-
     .admin-page {
         padding: 35px 22px 60px;
     }
@@ -461,12 +392,9 @@
     .admin-header {
         align-items: flex-start;
     }
-
 }
 
-
 @media (max-width: 650px) {
-
     .admin-page {
         padding: 30px 16px 50px;
     }
@@ -505,12 +433,9 @@
     .product-card-top {
         height: 220px;
     }
-
 }
 
-
 @media (max-width: 430px) {
-
     .admin-header-actions {
         flex-direction: column;
     }
@@ -528,5 +453,4 @@
     .product-count {
         align-self: flex-start;
     }
-
 }
