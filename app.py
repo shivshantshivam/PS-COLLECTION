@@ -366,8 +366,6 @@ def account_address():
         addresses=addresses
     )
 
-
-# Register
 # Register
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -376,6 +374,7 @@ def register():
 
         name = request.form.get("name")
         email = request.form.get("email")
+        phone = request.form.get("phone")
         password = request.form.get("password")
 
         cursor = db.cursor(dictionary=True)
@@ -395,6 +394,7 @@ def register():
 
         session["register_name"] = name
         session["register_email"] = email
+        session["register_phone"] = phone
         session["register_password"] = generate_password_hash(password)
         session["register_otp"] = generate_password_hash(otp)
         session["register_otp_expires"] = int(time.time()) + 600
@@ -403,7 +403,6 @@ def register():
         cursor.close()
 
         try:
-            print("BREVO KEY EXISTS:", bool(os.getenv("BREVO_API_KEY")))
             response = requests.post(
                 "https://api.brevo.com/v3/smtp/email",
                 headers={
@@ -433,6 +432,8 @@ def register():
                 },
                 timeout=10
             )
+            print("BREVO STATUS:", response.status_code)
+            print("BREVO RESPONSE:", response.text)
 
             if response.status_code >= 400:
 
@@ -440,6 +441,7 @@ def register():
 
                 session.pop("register_name", None)
                 session.pop("register_email", None)
+                session.pop("register_phone", None)
                 session.pop("register_password", None)
                 session.pop("register_otp", None)
                 session.pop("register_otp_expires", None)
@@ -457,8 +459,6 @@ def register():
 
     return render_template("register.html")
 
-
-# Verify OTP
 # Verify OTP
 @app.route("/verify-otp", methods=["GET", "POST"])
 def verify_otp():
@@ -494,12 +494,13 @@ def verify_otp():
                 cursor.execute(
                     """
                     INSERT INTO users
-                    (name, email, password, email_verified)
-                    VALUES (%s, %s, %s, %s)
+                    (name, email, phone, password, email_verified)
+                    VALUES (%s, %s, %s, %s, %s)
                     """,
                     (
                         session["register_name"],
                         session["register_email"],
+                        session["register_phone"],
                         session["register_password"],
                         True
                     )
@@ -510,6 +511,7 @@ def verify_otp():
 
                 session.pop("register_name", None)
                 session.pop("register_email", None)
+                session.pop("register_phone", None)
                 session.pop("register_password", None)
                 session.pop("register_otp", None)
                 session.pop("register_otp_expires", None)
@@ -525,7 +527,6 @@ def verify_otp():
     )
 
 
-# Login
 # Login
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -604,7 +605,7 @@ def forgot_password():
         cursor = db.cursor(dictionary=True)
 
         cursor.execute(
-            "SELECT id FROM users WHERE email = %s",
+            "SELECT id, name FROM users WHERE email = %s",
             (email,)
         )
 
@@ -624,29 +625,52 @@ def forgot_password():
         otp = str(random.randint(100000, 999999))
 
         session["reset_email"] = email
-        session["reset_otp"] = otp
+        session["reset_otp"] = generate_password_hash(otp)
+        session["reset_otp_expires"] = int(time.time()) + 600
+        session["reset_otp_attempts"] = 0
 
         try:
 
-            message = EmailMessage()
-
-            message["Subject"] = "Password Reset OTP"
-            message["From"] = os.getenv("MAIL_EMAIL")
-            message["To"] = email
-
-            message.set_content(
-                f"Your password reset OTP is: {otp}\n\n"
-                "Please enter this OTP on the website to reset your password."
+            response = requests.post(
+                "https://api.brevo.com/v3/smtp/email",
+                headers={
+                    "accept": "application/json",
+                    "api-key": os.getenv("BREVO_API_KEY"),
+                    "content-type": "application/json"
+                },
+                json={
+                    "sender": {
+                        "name": os.getenv(
+                            "BREVO_SENDER_NAME",
+                            "PS COLLECTION"
+                        ),
+                        "email": os.getenv("BREVO_SENDER_EMAIL")
+                    },
+                    "to": [
+                        {
+                            "email": email,
+                            "name": user["name"]
+                        }
+                    ],
+                    "subject": "PS COLLECTION - Password Reset OTP",
+                    "textContent": (
+                        f"Your password reset OTP is: {otp}\n\n"
+                        "This OTP is valid for 10 minutes."
+                    )
+                },
+                timeout=10
             )
 
-            with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            if response.status_code >= 400:
 
-                server.login(
-                    os.getenv("MAIL_EMAIL"),
-                    os.getenv("MAIL_PASSWORD")
-                )
+                print("Brevo error:", response.text)
 
-                server.send_message(message)
+                session.pop("reset_email", None)
+                session.pop("reset_otp", None)
+                session.pop("reset_otp_expires", None)
+                session.pop("reset_otp_attempts", None)
+
+                return "Unable to send OTP email"
 
         except Exception as e:
 
@@ -654,6 +678,8 @@ def forgot_password():
 
             session.pop("reset_email", None)
             session.pop("reset_otp", None)
+            session.pop("reset_otp_expires", None)
+            session.pop("reset_otp_attempts", None)
 
             return "Unable to send OTP email"
 
@@ -663,7 +689,6 @@ def forgot_password():
         "forgot_password.html",
         error=error
     )
-
 
 # Reset password
 @app.route("/reset-password", methods=["GET", "POST"])
@@ -676,44 +701,60 @@ def reset_password():
 
     if request.method == "POST":
 
-        otp = request.form.get("otp")
+        otp = request.form.get("otp", "").strip()
         password = request.form.get("password")
         confirm_password = request.form.get("confirm_password")
 
-        if otp != session["reset_otp"]:
+        if session.get("reset_otp_attempts", 0) >= 5:
 
-            error = "Invalid OTP"
+            error = "Too many attempts. Please request a new OTP."
 
-        elif password != confirm_password:
+        elif int(time.time()) > session.get("reset_otp_expires", 0):
 
-            error = "Passwords do not match"
+            error = "OTP expired. Please request a new one."
 
         else:
 
-            hashed_password = generate_password_hash(password)
+            session["reset_otp_attempts"] += 1
 
-            cursor = db.cursor()
+            if not check_password_hash(
+                session["reset_otp"],
+                otp
+            ):
 
-            cursor.execute(
-                """
-                UPDATE users
-                SET password = %s
-                WHERE email = %s
-                """,
-                (
-                    hashed_password,
-                    session["reset_email"]
+                error = "Invalid OTP"
+
+            elif password != confirm_password:
+
+                error = "Passwords do not match"
+
+            else:
+
+                hashed_password = generate_password_hash(password)
+
+                cursor = db.cursor()
+
+                cursor.execute(
+                    """
+                    UPDATE users
+                    SET password = %s
+                    WHERE email = %s
+                    """,
+                    (
+                        hashed_password,
+                        session["reset_email"]
+                    )
                 )
-            )
 
-            db.commit()
+                db.commit()
+                cursor.close()
 
-            cursor.close()
+                session.pop("reset_email", None)
+                session.pop("reset_otp", None)
+                session.pop("reset_otp_expires", None)
+                session.pop("reset_otp_attempts", None)
 
-            session.pop("reset_email", None)
-            session.pop("reset_otp", None)
-
-            return redirect(url_for("login"))
+                return redirect(url_for("login"))
 
     return render_template(
         "reset_password.html",
