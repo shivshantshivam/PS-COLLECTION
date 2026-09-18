@@ -6,9 +6,7 @@ A full-stack e-commerce web application built with Flask, MySQL, HTML, CSS, and 
 
 **Live Website:** (https://ps-collection.onrender.com/)
 
-**GitHub Repository:** Add your GitHub repository URL here
-
----
+**GitHub Repository:** (https://github.com/shivshantshivam/PS-COLLECTION)
 
 ## 📌 About The Project
 
